@@ -25,10 +25,16 @@ export default function Page() {
           p: 3,
           display: "grid",
           placeItems: "center",
+          minHeight: "100vh",
         }}
       >
-        <Box sx={{ width: "384px", mx: "auto" }}>
-          <Typography variant="h3" mb={0.5}>
+        <Box
+          sx={{
+            width: { xs: "100%", md: "384px" },
+            mx: "auto",
+          }}
+        >
+          <Typography variant="h4" mb={0.5}>
             Welcome Back
           </Typography>
           <Typography variant="subtitle2" color={"text.secondary"}>

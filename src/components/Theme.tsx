@@ -1,7 +1,6 @@
 "use client";
 
 import { CssBaseline, GlobalStyles } from "@mui/material";
-import { blue, deepOrange, orange, teal } from "@mui/material/colors";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ReactNode } from "react";
 
