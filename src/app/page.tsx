@@ -81,7 +81,6 @@ export default function Page() {
       </Grid>
       <Box
         sx={{
-          background: (theme) => theme.palette.background.paper,
           flexGrow: 1,
           flexShrink: 1,
           flexBasis: "25%",

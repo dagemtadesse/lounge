@@ -9,15 +9,15 @@ const theme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: teal[500],
+      main: "#fff",
     },
     background: {
-      default: "#1c1c1c",
-      paper: "#161616"
+      default: "#000",
     },
+    divider: "rgb(51, 51, 51)",
     text: {
       primary: "rgb(237, 237, 237)",
-      secondary: "rgba(255,255,255,0.6)",
+      secondary: "rgb(153, 153, 153)",
       disabled: "rgba(255,255,255,0.38)",
     },
   },
