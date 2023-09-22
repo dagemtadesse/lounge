@@ -1,15 +1,17 @@
 "use client";
 
+import { ROUTES } from "@/common/routes";
 import {
   Box,
   Button,
   Grid,
   InputLabel,
-  Link,
+  Link as MatLink,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
+import Link from "next/link";
 
 export default function Page() {
   return (
@@ -56,13 +58,15 @@ export default function Page() {
                 alignItems="center"
               >
                 <InputLabel htmlFor="password-input">Password</InputLabel>
-                <Link
+                <MatLink
                   variant="subtitle2"
                   color="text.secondary"
                   sx={{ ml: "auto" }}
+                  href={ROUTES.SIGN_UP}
+                  component={Link}
                 >
                   Forgot Password?
-                </Link>
+                </MatLink>
               </Stack>
               <TextField placeholder="Password" id="password-input" />
             </Stack>
@@ -80,7 +84,10 @@ export default function Page() {
               color="text.secondary"
               textAlign={"center"}
             >
-              Don&apos;t have an account? <Link>Sign Up Now</Link>
+              Don&apos;t have an account?{" "}
+              <MatLink component={Link} href={ROUTES.SIGN_UP}>
+                Sign Up Now
+              </MatLink>
             </Typography>
           </Stack>
         </Box>

@@ -1,7 +1,6 @@
 import "../styles/globals.css";
 import type { Metadata } from "next";
 import { CustomProvider } from "@/components/Theme";
-import { Box } from "@mui/material";
 
 export const metadata: Metadata = {
   title: "Lounge",
