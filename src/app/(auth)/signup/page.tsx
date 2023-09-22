@@ -1,16 +1,14 @@
 "use client";
 
 import { SignUpSchema } from "@/common/vallidations/SignUpSchema";
-import { toFormikValidationSchema } from 'zod-formik-adapter';
-
+import { toFormikValidationSchema } from "zod-formik-adapter";
+import GoogleIcon from "@mui/icons-material/Google";
 import {
   Box,
   Button,
   Grid,
-  InputLabel,
   Link as MatLink,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
@@ -57,63 +55,25 @@ export default function Page() {
 
             {/* <Divider>or</Divider> */}
 
-            <Stack gap={3} sx={{ mt: 5 }}>
-              <Stack gap={2}>
-                <InputLabel htmlFor="email-input">Email address</InputLabel>
-                <TextField
-                  placeholder="Email"
-                  id="email-input"
-                  name="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={Boolean(errors.email && touched.email)}
-                  helperText={errors.email}
-                />
-              </Stack>
-
-              <Stack gap={2}>
-                <Stack
-                  direction="row"
-                  justifyContent={"space-between"}
-                  alignItems="center"
-                >
-                  <InputLabel htmlFor="password-input">Password</InputLabel>
-                  <MatLink
-                    variant="subtitle2"
-                    color="text.secondary"
-                    sx={{ ml: "auto" }}
-                  >
-                    Forgot Password?
-                  </MatLink>
-                </Stack>
-                <TextField
-                  placeholder="Password"
-                  id="password-input"
-                  name="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={Boolean(errors.password && touched.password)}
-                  helperText={errors.password}
-                />
-              </Stack>
-
+            <Stack gap={2} sx={{ mt: 3 }}>
               <Button
                 variant="contained"
-                sx={{ mt: 2, textTransform: "none" }}
                 size="large"
-                type="submit"
-                disableElevation
+                sx={{ mt: 2, textTransform: "none" }}
+                startIcon={<GoogleIcon />}
               >
-                Sign Up
+                Sign Up with Google
               </Button>
+
               <Typography
                 variant="body2"
                 color="text.secondary"
                 textAlign={"center"}
               >
-                Have an account? <MatLink component={Link} href={ROUTES.SIGN_IN}>Sign In</MatLink>
+                Have an account?{" "}
+                <MatLink component={Link} href={ROUTES.SIGN_IN}>
+                  Sign In
+                </MatLink>
               </Typography>
             </Stack>
           </form>

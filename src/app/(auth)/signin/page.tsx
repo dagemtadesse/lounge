@@ -1,14 +1,13 @@
 "use client";
 
 import { ROUTES } from "@/common/routes";
+import GoogleIcon from "@mui/icons-material/Google";
 import {
   Box,
   Button,
   Grid,
-  InputLabel,
   Link as MatLink,
   Stack,
-  TextField,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
@@ -45,39 +44,15 @@ export default function Page() {
 
           {/* <Divider>or</Divider> */}
 
-          <Stack gap={3} sx={{ mt: 5 }}>
-            <Stack gap={2}>
-              <InputLabel htmlFor="email-input">Email address</InputLabel>
-              <TextField placeholder="Email" id="email-input" />
-            </Stack>
-
-            <Stack gap={2}>
-              <Stack
-                direction="row"
-                justifyContent={"space-between"}
-                alignItems="center"
-              >
-                <InputLabel htmlFor="password-input">Password</InputLabel>
-                <MatLink
-                  variant="subtitle2"
-                  color="text.secondary"
-                  sx={{ ml: "auto" }}
-                  href={ROUTES.SIGN_UP}
-                  component={Link}
-                >
-                  Forgot Password?
-                </MatLink>
-              </Stack>
-              <TextField placeholder="Password" id="password-input" />
-            </Stack>
-
+          <Stack gap={3} sx={{ mt: 3 }}>
             <Button
               variant="contained"
               sx={{ mt: 2, textTransform: "none" }}
               size="large"
               disableElevation
+              startIcon={<GoogleIcon/>}
             >
-              Login
+              Sign In with Google
             </Button>
             <Typography
               variant="body2"
