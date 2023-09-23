@@ -1,7 +1,5 @@
 "use client";
 
-import { ROUTES } from "@/common/routes";
-import GoogleIcon from "@mui/icons-material/Google";
 import {
   Box,
   Button,
@@ -11,6 +9,9 @@ import {
   Typography,
 } from "@mui/material";
 import Link from "next/link";
+import GoogleIcon from "@mui/icons-material/Google";
+import { signIn } from "next-auth/react";
+import { ROUTES } from "@/routes";
 
 export default function Page() {
   return (
@@ -42,19 +43,18 @@ export default function Page() {
             Sign in to your account
           </Typography>
 
-          {/* <Divider>or</Divider> */}
-
           <Stack gap={3} sx={{ mt: 3 }}>
             <Button
               variant="contained"
               sx={{ mt: 2, textTransform: "none" }}
               size="large"
               disableElevation
-              startIcon={<GoogleIcon/>}
+              startIcon={<GoogleIcon />}
+              onClick={() => signIn("google")}
             >
               Sign In with Google
             </Button>
-            <Typography
+            {/* <Typography
               variant="body2"
               color="text.secondary"
               textAlign={"center"}
@@ -63,7 +63,7 @@ export default function Page() {
               <MatLink component={Link} href={ROUTES.SIGN_UP}>
                 Sign Up Now
               </MatLink>
-            </Typography>
+            </Typography> */}
           </Stack>
         </Box>
       </Grid>
