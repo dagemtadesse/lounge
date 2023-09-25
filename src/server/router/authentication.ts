@@ -1,7 +1,7 @@
 import z from "zod";
 import bcrypt from "bcrypt";
 import { middleware, publicProcedure, router } from "../trpc";
-import { SignUpSchema } from "@/vallidations/authSchema";
+import { SignUpSchema } from "@/validations/authSchema";
 
 export const authRouter = router({
   login: publicProcedure

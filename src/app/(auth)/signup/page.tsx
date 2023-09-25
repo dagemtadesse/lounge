@@ -13,7 +13,7 @@ import Link from "next/link";
 import { ROUTES } from "@/routes";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
-import { SignUpSchema } from "@/vallidations/authSchema";
+import { SignUpSchema } from "@/validations/authSchema";
 import { trpc } from "@/app/_trpc/client";
 
 export default function Page() {
