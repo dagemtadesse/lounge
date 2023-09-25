@@ -4,6 +4,7 @@ import { CustomProvider } from "@/app/_components/Theme";
 
 import { getServerSession } from "next-auth";
 import SessionProvider from "@/app/_components/SessionProvider";
+import TRPCProvider from "./_trpc/Provider";
 
 export const metadata: Metadata = {
   title: "Lounge",
@@ -21,7 +22,9 @@ export default async function RootLayout({
     <html lang="en">
       <body>
         <SessionProvider session={session}>
-          <CustomProvider>{children}</CustomProvider>
+          <TRPCProvider>
+            <CustomProvider>{children}</CustomProvider>
+          </TRPCProvider>
         </SessionProvider>
       </body>
     </html>

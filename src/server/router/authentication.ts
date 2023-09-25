@@ -31,10 +31,7 @@ export const authRouter = router({
         data: { email, hashedPassword },
       });
 
-      return user;
+      return { ...user, hashedPassword: undefined };
     }),
 });
 
-export const isAuthed = middleware(({ next, ctx }) => {
-  return next({ ctx: {} });
-});
