@@ -1,4 +1,4 @@
-import { caller } from "@/server/trpc";
+import { caller } from "@/server/router";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
 import NextAuth, { AuthOptions } from "next-auth";
