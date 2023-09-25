@@ -6,15 +6,27 @@ import {
   Grid,
   Link as MatLink,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
 import Link from "next/link";
-import GoogleIcon from "@mui/icons-material/Google";
-import { signIn } from "next-auth/react";
 import { ROUTES } from "@/routes";
 import { useFormik } from "formik";
+import { toFormikValidationSchema } from "zod-formik-adapter";
+import { SignUpSchema } from "@/vallidations/authSchema";
 
 export default function Page() {
+  const { values, errors, touched, handleChange, handleBlur } = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+      submit: null,
+    },
+    onSubmit: () => {},
+    validationSchema: toFormikValidationSchema(SignUpSchema),
+  });
+
   return (
     <Grid container sx={{ minHeight: "100vh" }}>
       <Grid
@@ -45,17 +57,42 @@ export default function Page() {
           </Typography>
 
           <Stack gap={3} sx={{ mt: 3 }}>
+            <TextField
+              name="email"
+              label="Email"
+              value={values.email}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              helperText={errors.email}
+              error={Boolean(errors.email && touched.email)}
+            />
+            <TextField
+              name="password"
+              label="Password"
+              value={values.password}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              helperText={errors.password}
+              error={Boolean(errors.password && touched.password)}
+            />
+            <TextField
+              name="confirmPassword"
+              label="Confirm Password"
+              value={values.confirmPassword}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              helperText={errors.confirmPassword}
+              error={Boolean(errors.confirmPassword && touched.confirmPassword)}
+            />
             <Button
               variant="contained"
               sx={{ mt: 2, textTransform: "none" }}
               size="large"
               disableElevation
-              startIcon={<GoogleIcon />}
-              onClick={() => signIn("google")}
             >
-              Sign In with Google
+              Sign Up
             </Button>
-            {/* <Typography
+            <Typography
               variant="body2"
               color="text.secondary"
               textAlign={"center"}
@@ -64,7 +101,7 @@ export default function Page() {
               <MatLink component={Link} href={ROUTES.SIGN_UP}>
                 Sign Up Now
               </MatLink>
-            </Typography> */}
+            </Typography>
           </Stack>
         </Box>
       </Grid>

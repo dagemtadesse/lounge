@@ -1,6 +1,7 @@
 import z from "zod";
 import bcrypt from "bcrypt";
 import { middleware, publicProcedure, router } from "../trpc";
+import { SignUpSchema } from "@/vallidations/authSchema";
 
 export const authRouter = router({
   login: publicProcedure
@@ -21,7 +22,7 @@ export const authRouter = router({
     }),
 
   register: publicProcedure
-    .input(z.object({ email: z.string().email(), password: z.string() }))
+    .input(SignUpSchema)
     .mutation(async ({ ctx, input }) => {
       const { email, password } = input;
       const hashedPassword = await bcrypt.hash(password, 10);

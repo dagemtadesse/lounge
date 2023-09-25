@@ -1,4 +1,4 @@
-import { AuthGuard } from "@/components/AuthGuard";
+import { AuthGuard } from "@/app/_components/AuthGuard";
 
 export default function Home() {
   return (

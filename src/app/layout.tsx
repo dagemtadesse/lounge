@@ -1,9 +1,9 @@
 import "../styles/globals.css";
 import type { Metadata } from "next";
-import { CustomProvider } from "@/components/Theme";
+import { CustomProvider } from "@/app/_components/Theme";
 
 import { getServerSession } from "next-auth";
-import SessionProvider from "@/components/SessionProvider";
+import SessionProvider from "@/app/_components/SessionProvider";
 
 export const metadata: Metadata = {
   title: "Lounge",
