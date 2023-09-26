@@ -6,7 +6,7 @@ import { trpc } from "./client";
 import { httpBatchLink } from "@trpc/react-query";
 
 let URL = "http://localhost:3000/api/trpc";
-if (process.env.VERCEL_URL) URL = `https://${process.env.VERCEL_URL}`;
+if (process.env.NEXT_PUBLIC_VERCEL_URL) URL = `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`;
 
 export default function TRPCProvider({ children }: { children: ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
