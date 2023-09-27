@@ -1,6 +1,7 @@
 import { caller } from "@/server/router";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { PrismaClient } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
 import NextAuth, { AuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
@@ -17,36 +18,21 @@ const authOptions: AuthOptions = {
       authorize: async (credentials, req) => {
         if (!credentials) return null;
 
-        const user = await caller.auth.login({
-          email: credentials.email,
-          password: credentials.password,
-        });
-
-        return user ?? null;
-      },
-    }),
-    CredentialsProvider({
-      id: "signin-credentials",
-      credentials: {
-        email: { label: "username", type: "text" },
-        password: { label: "password", type: "password" },
-        confirmPassword: { label: "password", type: "password" },
-      },
-      authorize: async (credentials, req) => {
-        if (!credentials) return null;
-
-        const user = await caller.auth.register({
-          email: credentials.email,
-          password: credentials.password,
-          confirmPassword: credentials.confirmPassword,
-        });
-
-        return user ?? null;
+        try {
+          return await caller.auth.login({
+            email: credentials.email,
+            password: credentials.password,
+          });
+        } catch (error) {
+          throw new Error(
+            error instanceof TRPCError ? error.message : "Something went wrong."
+          );
+        }
       },
     }),
   ],
   pages: {
-    signIn: "/",
+    signIn: "/signin",
   },
   session: {
     strategy: "jwt",

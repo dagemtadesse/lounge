@@ -2,6 +2,7 @@ import z from "zod";
 import bcrypt from "bcrypt";
 import { middleware, publicProcedure, router } from "../trpc";
 import { SignUpSchema } from "@/validations/authSchema";
+import { TRPCError } from "@trpc/server";
 
 export const authRouter = router({
   login: publicProcedure
@@ -11,14 +12,18 @@ export const authRouter = router({
         where: { email: input.email },
       });
 
-      if (user) {
-        const matches = await bcrypt.compare(
-          input.password,
-          user.hashedPassword
-        );
+      let matches = false;
 
-        return matches ? { ...user, hashedPassword: undefined } : null;
-      }
+      if (user)
+        matches = await bcrypt.compare(input.password, user.hashedPassword);
+
+      if (user == null || !matches)
+        throw new TRPCError({
+          code: "UNAUTHORIZED",
+          message: "Password and email do not match.",
+        });
+
+      return { ...user, hashedPassword: undefined };
     }),
 
   register: publicProcedure
@@ -34,4 +39,3 @@ export const authRouter = router({
       return { ...user, hashedPassword: undefined };
     }),
 });
-
