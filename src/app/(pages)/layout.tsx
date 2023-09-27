@@ -4,7 +4,7 @@ import { CustomProvider } from "@/app/_components/Theme";
 
 import { getServerSession } from "next-auth";
 import SessionProvider from "@/app/_components/SessionProvider";
-import TRPCProvider from "./_trpc/Provider";
+import TRPCProvider from "../_trpc/Provider";
 
 export const metadata: Metadata = {
   title: "Lounge",

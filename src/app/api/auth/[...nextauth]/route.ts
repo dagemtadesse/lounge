@@ -10,7 +10,6 @@ const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
-      name: "Credentials",
       credentials: {
         email: { label: "username", type: "text" },
         password: { label: "password", type: "password" },
@@ -26,7 +25,29 @@ const authOptions: AuthOptions = {
         return user ?? null;
       },
     }),
+    CredentialsProvider({
+      id: "signin-credentials",
+      credentials: {
+        email: { label: "username", type: "text" },
+        password: { label: "password", type: "password" },
+        confirmPassword: { label: "password", type: "password" },
+      },
+      authorize: async (credentials, req) => {
+        if (!credentials) return null;
+
+        const user = await caller.auth.register({
+          email: credentials.email,
+          password: credentials.password,
+          confirmPassword: credentials.confirmPassword,
+        });
+
+        return user ?? null;
+      },
+    }),
   ],
+  pages: {
+    signIn: "/",
+  },
   session: {
     strategy: "jwt",
   },

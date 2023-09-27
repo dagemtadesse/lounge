@@ -28,6 +28,7 @@ export default function Page() {
         submit: null,
       },
       onSubmit: async (values) => {
+        
         await register.mutateAsync(values);
       },
       validationSchema: toFormikValidationSchema(SignUpSchema),
@@ -70,7 +71,7 @@ export default function Page() {
                 value={values.email}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                helperText={errors.email}
+                helperText={touched.email ? errors.email : undefined}
                 error={Boolean(errors.email && touched.email)}
               />
               <TextField
@@ -80,7 +81,7 @@ export default function Page() {
                 value={values.password}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                helperText={errors.password}
+                helperText={touched.password ? errors.password : undefined}
                 error={Boolean(errors.password && touched.password)}
               />
               <TextField
@@ -90,7 +91,9 @@ export default function Page() {
                 value={values.confirmPassword}
                 onChange={handleChange}
                 onBlur={handleBlur}
-                helperText={errors.confirmPassword}
+                helperText={
+                  touched.confirmPassword ? errors.confirmPassword : undefined
+                }
                 error={Boolean(
                   errors.confirmPassword && touched.confirmPassword
                 )}
@@ -110,7 +113,7 @@ export default function Page() {
                 textAlign={"center"}
               >
                 Do have an account?{" "}
-                <MatLink component={Link} href={ROUTES.SIGN_UP}>
+                <MatLink component={Link} href={ROUTES.SIGN_IN}>
                   Sign In
                 </MatLink>
               </Typography>
