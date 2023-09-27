@@ -11,9 +11,9 @@ const theme = createTheme({
       main: "#fff",
     },
     background: {
-      default: "#000",
+      default: "rgb(12, 12, 14)",
     },
-    divider: "rgb(51, 51, 51)",
+    divider: "rgb(255, 255, 255, 0.2)",
     text: {
       primary: "rgb(237, 237, 237)",
       secondary: "rgb(153, 153, 153)",
@@ -21,11 +21,11 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: "'Inter', sans-serif",
+    fontFamily: "'Public Sans', sans-serif",
   },
 });
 
-export const CustomProvider = ({ children }: { children: ReactNode }) => {
+export const CustomThemeProvider = ({ children }: { children: ReactNode }) => {
   return (
     <ThemeProvider theme={theme}>
       {children}

@@ -1,10 +1,12 @@
 import "../../styles/globals.css";
 import type { Metadata } from "next";
-import { CustomProvider } from "@/app/_components/Theme";
+import { CustomThemeProvider } from "@/app/_components/Theme";
 
 import { getServerSession } from "next-auth";
 import SessionProvider from "@/app/_components/SessionProvider";
 import TRPCProvider from "../_trpc/Provider";
+import { Header } from "../_components/Header";
+import { Stack } from "@mui/material";
 
 export const metadata: Metadata = {
   title: "Lounge",
@@ -23,7 +25,12 @@ export default async function RootLayout({
       <body>
         <SessionProvider session={session}>
           <TRPCProvider>
-            <CustomProvider>{children}</CustomProvider>
+            <CustomThemeProvider>
+              <Stack direction={{ xs: "column", md: "row" }}>
+                <Header />
+                {children}
+              </Stack>
+            </CustomThemeProvider>
           </TRPCProvider>
         </SessionProvider>
       </body>

@@ -114,7 +114,7 @@ export default function Page() {
                   disableElevation
                   type="submit"
                 >
-                  {!isSubmitting ? "Sign In" : <CircularProgress size="1em" />}
+                  {!isSubmitting ? "Sign In" : <CircularProgress size="1.25125rem" />}
                 </Button>
                 <Typography
                   variant="body2"

@@ -2,8 +2,8 @@
 
 import { ROUTES } from "@/routes";
 import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { ReactNode, useEffect } from "react";
 
 export const AuthGuard = ({
   children,
@@ -13,11 +13,14 @@ export const AuthGuard = ({
   require: "loggedIn" | "loggedOut" | undefined;
 }) => {
   const { status } = useSession();
+  const router = useRouter();
 
-  if (require == "loggedIn" && status == "unauthenticated")
-    redirect(ROUTES.SIGN_IN);
-  if (require == "loggedOut" && status == "authenticated")
-    redirect(ROUTES.HOME);
+  useEffect(() => {
+    if (require == "loggedIn" && status == "unauthenticated")
+      router.push(ROUTES.SIGN_IN);
+    if (require == "loggedOut" && status == "authenticated")
+      router.push(ROUTES.HOME);
+  }, [router, require, status]);
 
   return <>{children}</>;
 };
