@@ -58,10 +58,10 @@ export default function Page() {
             }}
           >
             <Typography variant="h4" mb={0.5}>
-              Welcome Back
+              Get Started
             </Typography>
             <Typography variant="subtitle2" color={"text.secondary"}>
-              Sign in to your account
+              Create your account
             </Typography>
 
             <form onSubmit={handleSubmit}>

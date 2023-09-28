@@ -56,6 +56,7 @@ export const Header = () => {
         <Stack>
           <Link href={ROUTES.HOME}>
             <Button
+              color="secondary"
               sx={{
                 display: { sm: "inline-flex", md: "block" },
                 alignItems: "center",
@@ -63,7 +64,6 @@ export const Header = () => {
               }}
             >
               <Logo />
-
               <Typography
                 variant="subtitle2"
                 fontWeight={"bold"}
