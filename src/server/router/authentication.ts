@@ -1,6 +1,6 @@
 import z from "zod";
 import bcrypt from "bcrypt";
-import { middleware, publicProcedure, router } from "../trpc";
+import { publicProcedure, router } from "../trpc";
 import { SignUpSchema } from "@/validations/authSchema";
 import { TRPCError } from "@trpc/server";
 
@@ -30,8 +30,18 @@ export const authRouter = router({
     .input(SignUpSchema)
     .mutation(async ({ ctx, input }) => {
       const { email, password } = input;
-      const hashedPassword = await bcrypt.hash(password, 10);
 
+      const existingUser = await ctx.prisma.user.findFirst({
+        where: { email },
+      });
+
+      if (existingUser != null)
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "Email address already taken.",
+        });
+
+      const hashedPassword = await bcrypt.hash(password, 10);
       const user = await ctx.prisma.user.create({
         data: { email, hashedPassword },
       });
