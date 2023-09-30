@@ -2,11 +2,20 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type ModalState = {
   activeModalId?: string;
+  alert?: {
+    message: string;
+    type: "error" | "success" | "info" | "warning";
+  };
 };
 
-const initialState: ModalState = {};
+const initialState: ModalState = {
+  alert: {
+    message: "Failed",
+    type: "error",
+  },
+};
 
-export const modalSlice = createSlice({
+export const appSlice = createSlice({
   name: "modal-slice",
   initialState,
   reducers: {
@@ -17,9 +26,18 @@ export const modalSlice = createSlice({
     closeModal(state) {
       state.activeModalId = undefined;
     },
+
+    setAlert(state, action: PayloadAction<any>) {
+      state.alert = action.payload;
+    },
+
+    removeAlert(state) {
+      state.alert = undefined;
+    },
   },
 });
 
-export const { closeModal , openModal} = modalSlice.actions;
+export const { closeModal, openModal, setAlert, removeAlert } =
+  appSlice.actions;
 
-export default modalSlice.reducer;
+export default appSlice.reducer;

@@ -27,7 +27,7 @@ export const CreateChatRoomModal = () => {
   const modalId = CreateChatRoomModal.name;
 
   const dispatch = useAppDispatch();
-  const { activeModalId } = useAppSelector((state) => state.modals);
+  const { activeModalId } = useAppSelector((state) => state.app);
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 

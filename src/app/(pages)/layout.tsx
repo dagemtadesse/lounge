@@ -8,6 +8,7 @@ import SessionProvider from "@/app/_components/SessionProvider";
 import TRPCProvider from "../_trpc/Provider";
 import { Header } from "../_components/Header";
 import { ReduxProvider } from "@/store/Provider";
+import { SnackbarProvider } from "../_components/modals/SnackbarProvider";
 
 export const metadata: Metadata = {
   title: "Lounge",
@@ -31,6 +32,7 @@ export default async function RootLayout({
                 <Stack direction={{ xs: "column", md: "row" }}>
                   <Header />
                   {children}
+                  <SnackbarProvider />
                 </Stack>
               </CustomThemeProvider>
             </ReduxProvider>

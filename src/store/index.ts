@@ -1,11 +1,11 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
-import modals from "./reducers/modals";
+import app from "./reducers/modals";
 
 const store = configureStore({
   reducer: {
-    modals,
+    app,
   },
 });
 
