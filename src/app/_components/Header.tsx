@@ -3,7 +3,6 @@
 import {
   AppBar,
   Avatar,
-  Box,
   Button,
   Fab,
   IconButton,
@@ -12,22 +11,20 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import AccountCircle from "@mui/icons-material/AccountCircle";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import { Logo } from "../_icons/logo";
 import { ROUTES } from "@/routes";
 import Link from "next/link";
 import { Add, GroupAdd } from "@mui/icons-material";
-import GroupAddIcon from "@mui/icons-material/GroupAdd";
+import { CreateChatRoomModal } from "./modals/CreateChatRoomModal";
+import { openModal } from "@/store/reducers/modals";
+import { useAppDispatch } from "@/store";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { data } = useSession();
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -36,6 +33,8 @@ export const Header = () => {
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const dispatch = useAppDispatch();
 
   return (
     <AppBar
@@ -82,7 +81,10 @@ export const Header = () => {
 
         {data && (
           <Stack sx={{ mx: { md: "auto" } }} alignItems="center" gap={4}>
-            <Fab size="small">
+            <Fab
+              size="small"
+              onClick={() => dispatch(openModal(CreateChatRoomModal.name))}
+            >
               <GroupAdd />
             </Fab>
             <Fab size="small" color="primary">
