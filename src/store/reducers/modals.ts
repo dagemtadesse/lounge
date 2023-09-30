@@ -8,12 +8,7 @@ type ModalState = {
   };
 };
 
-const initialState: ModalState = {
-  alert: {
-    message: "Failed",
-    type: "error",
-  },
-};
+const initialState: ModalState = {};
 
 export const appSlice = createSlice({
   name: "modal-slice",
@@ -27,7 +22,13 @@ export const appSlice = createSlice({
       state.activeModalId = undefined;
     },
 
-    setAlert(state, action: PayloadAction<any>) {
+    setAlert(
+      state,
+      action: PayloadAction<{
+        message: string;
+        type: "error" | "success" | "info" | "warning";
+      }>
+    ) {
       state.alert = action.payload;
     },
 

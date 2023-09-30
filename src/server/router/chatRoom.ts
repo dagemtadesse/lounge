@@ -22,23 +22,11 @@ export const chatRoomRouter = router({
         ) {
           throw new TRPCError({
             code: "CONFLICT",
-            message: "Invalid handle for chat room.",
+            message: "Handle already taken.",
           });
         }
 
         throw e;
       }
-    }),
-
-  isHandleAvailble: protectedProcedure
-    .input(z.string())
-    .query(async ({ ctx, input: handle }) => {
-      const room = await ctx.prisma.room.findFirst({
-        where: {
-          handle,
-        },
-      });
-
-      return Boolean(room);
     }),
 });
