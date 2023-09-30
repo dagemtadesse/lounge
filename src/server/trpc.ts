@@ -8,7 +8,7 @@ export const publicProcedure = t.procedure;
 export const middleware = t.middleware;
 
 export const isAuthed = middleware(({ next, ctx }) => {
-  if (ctx.session == null) {
+  if (ctx.session == null || !ctx.session.userId) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
   }
   return next();

@@ -31,6 +31,16 @@ export const authOptions: AuthOptions = {
       },
     }),
   ],
+  callbacks: {
+    jwt: ({ token, user }) => {
+      if (user) token.userId = user.id;
+      return token;
+    },
+    session: ({ session, token }) => {
+      if (token) session.userId = token.userId as any;
+      return session;
+    },
+  },
   pages: {
     signIn: "/signin",
   },
