@@ -46,6 +46,7 @@ model User {
   image          String?
   accounts       Account[]
   sessions       Session[]
+  rooms          Room[]
 }
 
 model VerificationToken {
@@ -54,4 +55,16 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Room {
+  id          String   @id @default(cuid())
+  name        String
+  handle      String?  @unique
+  emojiIcon   String?
+  isPublic    Boolean  @default(false)
+  createdById String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  createBy    User     @relation(fields: [createdById], references: [id])
 }
