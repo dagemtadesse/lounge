@@ -2,8 +2,10 @@
 
 import {
   AppBar,
+  Avatar,
   Box,
   Button,
+  Fab,
   IconButton,
   Menu,
   MenuItem,
@@ -16,6 +18,8 @@ import { useState } from "react";
 import { Logo } from "../_icons/logo";
 import { ROUTES } from "@/routes";
 import Link from "next/link";
+import { Add, GroupAdd } from "@mui/icons-material";
+import GroupAddIcon from "@mui/icons-material/GroupAdd";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -40,6 +44,7 @@ export const Header = () => {
         width: "auto",
         left: 0,
         right: "auto",
+        bgcolor: "transparent",
       }}
       position="relative"
       color="primary"
@@ -76,7 +81,14 @@ export const Header = () => {
         </Stack>
 
         {data && (
-          <Box sx={{ mx: { md: "auto" } }}>
+          <Stack sx={{ mx: { md: "auto" } }} alignItems="center" gap={4}>
+            <Fab size="small">
+              <GroupAdd />
+            </Fab>
+            <Fab size="small" color="primary">
+              <Add />
+            </Fab>
+
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -85,7 +97,7 @@ export const Header = () => {
               onClick={handleMenu}
               color="inherit"
             >
-              <AccountCircle />
+              <Avatar>D</Avatar>
             </IconButton>
 
             <Menu
@@ -101,7 +113,7 @@ export const Header = () => {
               <MenuItem>My account</MenuItem>
               <MenuItem onClick={() => signOut()}>Logout</MenuItem>
             </Menu>
-          </Box>
+          </Stack>
         )}
       </Stack>
     </AppBar>
