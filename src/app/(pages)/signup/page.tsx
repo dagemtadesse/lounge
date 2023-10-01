@@ -15,7 +15,7 @@ import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { SignUpSchema } from "@/validations/authSchema";
 import { trpc } from "@/app/_trpc/client";
-import { AuthGuard } from "@/app/_components/AuthGuard";
+import { AuthGuard } from "@/components/AuthGuard";
 
 export default function Page() {
   const register = trpc.auth.register.useMutation();

@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
-import { Logo } from "../_icons/logo";
+import { Logo } from "./icons/logo";
 import { ROUTES } from "@/routes";
 import Link from "next/link";
 import { Add, GroupAdd } from "@mui/icons-material";

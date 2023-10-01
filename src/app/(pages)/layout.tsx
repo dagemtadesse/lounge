@@ -3,12 +3,12 @@ import { Stack } from "@mui/material";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 
-import { CustomThemeProvider } from "@/app/_components/Theme";
-import SessionProvider from "@/app/_components/SessionProvider";
+import { CustomThemeProvider } from "@/components/Theme";
+import SessionProvider from "@/components/SessionProvider";
 import TRPCProvider from "../_trpc/Provider";
-import { Header } from "../_components/Header";
+import { Header } from "@/components/Header";
 import { ReduxProvider } from "@/store/Provider";
-import { SnackbarProvider } from "../_components/modals/SnackbarProvider";
+import { SnackbarProvider } from "@/components/modals/SnackbarProvider";
 
 export const metadata: Metadata = {
   title: "Lounge",

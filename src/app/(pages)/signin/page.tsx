@@ -17,7 +17,7 @@ import { ROUTES } from "@/routes";
 import { useFormik } from "formik";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 import { LoginSchema } from "@/validations/authSchema";
-import { AuthGuard } from "@/app/_components/AuthGuard";
+import { AuthGuard } from "@/components/AuthGuard";
 
 export default function Page() {
   const router = useRouter();
