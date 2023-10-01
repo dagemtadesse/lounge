@@ -38,15 +38,16 @@ model Session {
 }
 
 model User {
-  id             String    @id @default(cuid())
+  id             String           @id @default(cuid())
   name           String?
-  email          String?   @unique
+  email          String?          @unique
   emailVerified  DateTime?
-  hashedPassword String    @db.Text
+  hashedPassword String           @db.Text
   image          String?
   accounts       Account[]
   sessions       Session[]
   rooms          Room[]
+  memberships    RoomMembership[]
 }
 
 model VerificationToken {
@@ -58,13 +59,25 @@ model VerificationToken {
 }
 
 model Room {
-  id          String   @id @default(cuid())
+  id          String           @id @default(cuid())
   name        String
-  handle      String?  @unique
+  handle      String?          @unique
   emojiIcon   String?
-  isPublic    Boolean  @default(false)
+  isPublic    Boolean          @default(false)
   createdById String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  createBy    User     @relation(fields: [createdById], references: [id])
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  createBy    User             @relation(fields: [createdById], references: [id])
+  memberships RoomMembership[]
+}
+
+model RoomMembership {
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  roomId    String
+  Room      Room     @relation(fields: [roomId], references: [id])
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([roomId, userId])
 }

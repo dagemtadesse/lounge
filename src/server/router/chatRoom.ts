@@ -42,4 +42,30 @@ export const chatRoomRouter = router({
 
       return rooms;
     }),
+
+  join: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session!.userId;
+      const membership = await ctx.prisma.roomMembership.create({
+        data: { userId, roomId: input },
+      });
+
+      return membership;
+    }),
+
+  getById: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session!.userId;
+
+      return ctx.prisma.room.findFirst({
+        where: { id: input },
+        include: {
+          memberships: {
+            where: { userId: userId },
+          },
+        },
+      });
+    }),
 });

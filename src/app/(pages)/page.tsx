@@ -1,14 +1,18 @@
+"use client";
+
 import { AuthGuard } from "@/components/AuthGuard";
-import { Box } from "@mui/material";
+import { Stack } from "@mui/material";
 import { SideBar } from "@/components/chat/SideBar";
 import { CreateChatRoomModal } from "@/components/modals/CreateChatRoomModal";
+import { ChatWindow } from "@/components/chat/ChatWindow";
 
 export default function Home() {
   return (
     <AuthGuard require="loggedIn">
-      <Box>
+      <Stack sx={{ width: "100%" }} direction="row">
         <SideBar></SideBar>
-      </Box>
+        <ChatWindow />
+      </Stack>
       <CreateChatRoomModal />
     </AuthGuard>
   );

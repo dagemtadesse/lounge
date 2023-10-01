@@ -50,7 +50,7 @@ export const Header = () => {
     >
       <Stack
         sx={{
-          p: 1,
+          p: 0.5,
           flexDirection: { xs: "row", md: "column" },
           justifyContent: "space-between",
           height: "100%",

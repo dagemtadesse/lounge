@@ -9,9 +9,10 @@ import {
   Skeleton,
 } from "@mui/material";
 import { Room } from "@prisma/client";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
-export const Rooms = ({ data }: { data?: Room[] }) => {
+export const RecentChats = ({ data }: { data?: Room[] }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const chatRooms = "abcdef".split("");
 
@@ -23,7 +24,7 @@ export const Rooms = ({ data }: { data?: Room[] }) => {
         alignItems="bottom"
         px={1.5}
       >
-        <Typography variant="subtitle2">Chat Rooms</Typography>
+        <Typography variant="subtitle2">Recent Chats</Typography>
         <Button
           color="secondary"
           size="small"
@@ -57,10 +58,14 @@ export const Rooms = ({ data }: { data?: Room[] }) => {
 };
 
 export const ChatRoomButton = ({ room }: { room: Room }) => {
+  const router = useRouter();
+  const path = usePathname();
+
   return (
     <Button
       color="secondary"
       sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+      onClick={() => router.push(`${path}?roomId=${room.id}`)}
     >
       <Avatar
         sx={{

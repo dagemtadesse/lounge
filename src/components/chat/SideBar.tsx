@@ -4,7 +4,7 @@ import { trpc } from "@/app/_trpc/client";
 import { useAppSelector } from "@/store";
 import { Box, Stack } from "@mui/material";
 import { Contacts } from "./Contacts";
-import { Rooms } from "./Rooms";
+import { RecentChats } from "./Rooms";
 import { SearchBar } from "./SearchBar";
 
 export const SideBar = () => {
@@ -25,7 +25,7 @@ export const SideBar = () => {
     >
       <Stack gap={3}>
         <SearchBar />
-        <Rooms data={filteredRooms.data}/>
+        <RecentChats data={filteredRooms.data}/>
         <Contacts />
       </Stack>
     </Box>
