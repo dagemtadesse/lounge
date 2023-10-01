@@ -1,15 +1,17 @@
-import { Search } from "@mui/icons-material";
-import {
-  Box,
-  IconButton,
-  InputAdornment,
-  Stack,
-  TextField,
-} from "@mui/material";
+"use client";
+
+import { trpc } from "@/app/_trpc/client";
+import { useAppSelector } from "@/store";
+import { Box, Stack } from "@mui/material";
 import { Contacts } from "./Contacts";
 import { Rooms } from "./Rooms";
+import { SearchBar } from "./SearchBar";
 
 export const SideBar = () => {
+  const { query } = useAppSelector((state) => state.chatRoom);
+
+  const filteredRooms = trpc.chatRoom.searchRoom.useQuery(query);
+
   return (
     <Box
       sx={{
@@ -22,33 +24,8 @@ export const SideBar = () => {
       }}
     >
       <Stack gap={3}>
-        <Box
-          p={1.5}
-          sx={{
-            position: "sticky",
-            top: 0,
-            zIndex: 100,
-            bgcolor: "background.default",
-          }}
-        >
-          <TextField
-            fullWidth
-            sx={{}}
-            size="small"
-            placeholder="Search for Contacts and Chat Rooms"
-            InputProps={{
-              sx: {},
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton size="small">
-                    <Search />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Box>
-        <Rooms />
+        <SearchBar />
+        <Rooms data={filteredRooms.data}/>
         <Contacts />
       </Stack>
     </Box>

@@ -29,4 +29,17 @@ export const chatRoomRouter = router({
         throw e;
       }
     }),
+
+  searchRoom: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input: query }) => {
+      const rooms = await ctx.prisma.room.findMany({
+        where: {
+          isPublic: true,
+          OR: [{ handle: { contains: query } }, { name: { contains: query } }],
+        },
+      });
+
+      return rooms;
+    }),
 });

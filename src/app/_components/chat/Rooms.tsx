@@ -8,9 +8,10 @@ import {
   Collapse,
   Skeleton,
 } from "@mui/material";
+import { Room } from "@prisma/client";
 import { useState } from "react";
 
-export const Rooms = () => {
+export const Rooms = ({ data }: { data?: Room[] }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const chatRooms = "abcdef".split("");
 
@@ -45,9 +46,9 @@ export const Rooms = () => {
           flexWrap={"wrap"}
           px={1.5}
         >
-          {chatRooms.map((room, index) => (
-            // <ChatRoomButton key={`Rooms_` + index} room={room} />
-            <ChatRoomButtonSkeleton key={`Rooms_` + index} />
+          {data?.map((room, index) => (
+            <ChatRoomButton key={`Rooms_` + index} room={room} />
+            // <ChatRoomButtonSkeleton key={`Rooms_` + index} />
           ))}
         </Stack>
       </Collapse>
@@ -55,14 +56,21 @@ export const Rooms = () => {
   );
 };
 
-export const ChatRoomButton = ({ room }: { room: string }) => {
+export const ChatRoomButton = ({ room }: { room: Room }) => {
   return (
     <Button
       color="secondary"
       sx={{ display: "flex", flexDirection: "column", gap: 1 }}
     >
-      <Avatar sx={{ height: 56, aspectRatio: 1, width: 56 }}>
-        {room.toUpperCase()}
+      <Avatar
+        sx={{
+          height: 56,
+          width: 56,
+          fontSize: Boolean(room.emojiIcon) ? "56px" : "32px",
+          bgcolor: Boolean(room.emojiIcon) ? "transparent" : "grey.300",
+        }}
+      >
+        {room.emojiIcon || room.name[0].toUpperCase()}
       </Avatar>
       <Typography
         variant="body2"
@@ -75,7 +83,7 @@ export const ChatRoomButton = ({ room }: { room: string }) => {
           width: "100%",
         }}
       >
-        Chat Room #1
+        {room.name}
       </Typography>
     </Button>
   );
