@@ -13,6 +13,7 @@ import {
 import { useSearchParams } from "next/navigation";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Room } from "@prisma/client";
+import { MessageBoard } from "../messages/MessageBoard";
 
 export const ChatWindow = () => {
   const params = useSearchParams();
@@ -25,10 +26,10 @@ export const ChatWindow = () => {
   const joinChatroom = trpc.chatRoom.join.useMutation();
 
   return (
-    <Paper sx={{ flexGrow: 1 }}>
-      <Stack sx={{ height: "100%" }}>
+    <Paper sx={{ flexGrow: 1, }}>
+      <Stack sx={{ height: "100vh" }}>
         <ChatWindowToolbar room={room} />
-        <Box sx={{ flexGrow: 1 }} />
+        <MessageBoard room={room} />
         <Stack p={1}>
           {!Boolean(room?.memberships.length) && (
             <Button
