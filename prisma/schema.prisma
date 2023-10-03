@@ -48,6 +48,8 @@ model User {
   sessions       Session[]
   rooms          Room[]
   memberships    RoomMembership[]
+  Message        Message[]
+  MessageStatus  MessageStatus[]
 }
 
 model VerificationToken {
@@ -69,6 +71,7 @@ model Room {
   updatedAt   DateTime         @updatedAt
   createBy    User             @relation(fields: [createdById], references: [id])
   memberships RoomMembership[]
+  Message     Message[]
 }
 
 model RoomMembership {
@@ -80,4 +83,27 @@ model RoomMembership {
   user      User     @relation(fields: [userId], references: [id])
 
   @@unique([roomId, userId])
+}
+
+model Message {
+  id            String          @id @default(cuid())
+  content       String
+  isEdited      Boolean         @default(false)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  authorId      String?
+  author        User?           @relation(fields: [authorId], references: [id])
+  roomId        String
+  room          Room            @relation(fields: [roomId], references: [id])
+  MessageStatus MessageStatus[]
+}
+
+model MessageStatus {
+  viewed    Boolean @default(false)
+  messageId String
+  message   Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User    @relation(fields: [userId], references: [id])
+
+  @@unique([messageId, userId])
 }
