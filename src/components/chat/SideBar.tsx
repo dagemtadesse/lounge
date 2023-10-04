@@ -3,7 +3,8 @@
 import { trpc } from "@/app/_trpc/client";
 import { useAppSelector } from "@/store";
 import { Box, Stack } from "@mui/material";
-import { Contacts } from "./Contacts";
+import { red } from "@mui/material/colors";
+import { Contacts } from "../contacts/Contacts";
 import { RecentChats } from "./Rooms";
 import { SearchBar } from "./SearchBar";
 
@@ -13,21 +14,28 @@ export const SideBar = () => {
   const filteredRooms = trpc.chatRoom.searchRoom.useQuery(query);
 
   return (
-    <Box
+    <Stack
       sx={{
         borderRight: 1,
         borderColor: "divider",
         width: { xs: "100%", md: "384px" },
         maxHeight: "100vh",
         height: "100%",
-        overflow: "scroll",
+        overflow: "hidden",
       }}
     >
-      <Stack gap={3}>
-        <SearchBar />
-        <RecentChats data={filteredRooms.data}/>
+      <SearchBar />
+      <Stack
+        gap={3}
+        sx={{
+          width: '100%',
+          flexGrow: 1, 
+          overflow: "scroll",
+        }}
+      >
+        <RecentChats data={filteredRooms.data} />
         <Contacts />
       </Stack>
-    </Box>
+    </Stack>
   );
 };

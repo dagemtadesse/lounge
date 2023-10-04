@@ -1,34 +1,17 @@
 import { MoreVertOutlined } from "@mui/icons-material";
-import {
-  Avatar,
-  Card,
-  CardHeader,
-  IconButton,
-  Skeleton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Card, CardHeader, Avatar, IconButton, Skeleton } from "@mui/material";
 import { red } from "@mui/material/colors";
-
-export const Contacts = () => {
-  const contacts = Array(7).fill(5);
-
-  return (
-    <Stack p={1.5} gap={2}>
-      <Typography variant="subtitle2">Direct Message</Typography>
-
-      <Stack>
-        {contacts.map((contact, index) => (
-          <ContactSkeleton key={`contact-` + index} />
-        ))}
-      </Stack>
-    </Stack>
-  );
-};
 
 export const Contact = () => {
   return (
-    <Card sx={{ bgcolor: "transparent", backgroundImage: "none", p: 0, boxShadow: 0 }}>
+    <Card
+      sx={{
+        bgcolor: "transparent",
+        backgroundImage: "none",
+        p: 0,
+        boxShadow: 0,
+      }}
+    >
       <CardHeader
         sx={{ px: 0, alignItems: "center", bgcolor: "transparent" }}
         avatar={
@@ -50,7 +33,14 @@ export const Contact = () => {
 
 export const ContactSkeleton = () => {
   return (
-    <Card sx={{ bgcolor: "transparent", backgroundImage: "none", p: 0, boxShadow: 0 }}>
+    <Card
+      sx={{
+        bgcolor: "transparent",
+        backgroundImage: "none",
+        p: 0,
+        boxShadow: 0,
+      }}
+    >
       <CardHeader
         sx={{ px: 0, alignItems: "center", bgcolor: "transparent" }}
         avatar={
