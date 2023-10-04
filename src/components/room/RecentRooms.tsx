@@ -8,18 +8,22 @@ import {
   Collapse,
   Skeleton,
   Box,
+  useTheme,
+  alpha,
 } from "@mui/material";
+import { blue } from "@mui/material/colors";
 import { Room } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 
 export const RecentChats = ({ data }: { data?: Room[] }) => {
   const [isExpanded, setIsExpanded] = useState(true);
+  const theme = useTheme();
 
   return (
     <Stack
       sx={{
-        bgcolor: "rgba(255,255,255,0.05)",
+        // bgcolor: alpha(blue[500], 0.05),
         px: 1.5,
         py: 1,
         alignItems: "start",

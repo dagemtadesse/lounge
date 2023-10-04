@@ -13,13 +13,14 @@ import {
 } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
-import { Logo } from "./icons/logo";
+import { Logo } from "../icons/logo";
 import { ROUTES } from "@/routes";
 import Link from "next/link";
 import { Add, GroupAdd } from "@mui/icons-material";
-import { CreateChatRoomModal } from "./modals/CreateChatRoomModal";
+import { CreateChatRoomModal } from "../modals/CreateChatRoomModal";
 import { openModal } from "@/store/reducers/modals";
 import { useAppDispatch } from "@/store";
+import { ContactsModal } from "../contact/ContactModal";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -43,9 +44,11 @@ export const Header = () => {
         width: "auto",
         left: 0,
         right: "auto",
-        bgcolor: "transparent",
+        background:
+          "linear-gradient(0deg,rgba(209,225,255,.08),rgba(209,225,255,.08)),#1f1f1f",
       }}
       position="relative"
+      elevation={0}
       color="primary"
     >
       <Stack
@@ -87,7 +90,11 @@ export const Header = () => {
             >
               <GroupAdd />
             </Fab>
-            <Fab size="small" color="primary">
+            <Fab
+              size="small"
+              color="primary"
+              onClick={() => dispatch(openModal(ContactsModal.name))}
+            >
               <Add />
             </Fab>
 

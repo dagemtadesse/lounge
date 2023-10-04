@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth";
 import { CustomThemeProvider } from "@/components/Theme";
 import SessionProvider from "@/components/SessionProvider";
 import TRPCProvider from "../_trpc/Provider";
-import { Header } from "@/components/Header";
+import { Header } from "@/components/layout/Header";
 import { ReduxProvider } from "@/store/Provider";
 import { SnackbarProvider } from "@/components/modals/SnackbarProvider";
 

@@ -15,8 +15,6 @@ export const SideBar = () => {
   return (
     <Stack
       sx={{
-        borderRight: 1,
-        borderColor: "divider",
         width: { xs: "100%", md: "384px" },
         maxHeight: "100vh",
         height: "100%",

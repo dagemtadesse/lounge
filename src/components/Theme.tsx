@@ -18,8 +18,8 @@ const theme = createTheme({
       main: red[300],
     },
     background: {
-      default: "#191919",
-      paper: "#080708",
+      default: "#28292a",
+      paper: "#202124",
     },
     divider: "rgb(255, 255, 255, 0.1)",
     text: {

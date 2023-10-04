@@ -3,7 +3,7 @@
 import { trpc } from "@/app/_trpc/client";
 import { Box, Slide, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { useState } from "react";
-import { RoomItem, RoomItemeleton } from "./RoomItem";
+import { RoomItem, RoomItemSkeleton } from "./RoomItem";
 
 function a11yProps(index: number) {
   return {
@@ -21,8 +21,6 @@ export const RoomList = () => {
   };
 
   const { data: myRooms } = trpc.chatRoom.getMyRooms.useQuery({});
-
-  console.log(myRooms);
 
   return (
     <Stack>
@@ -59,7 +57,7 @@ export const RoomList = () => {
               <RoomItem room={room} key={room.id} />
             ))
           : contacts.map((_, index) => (
-              <RoomItemeleton key={`contact-` + index} />
+              <RoomItemSkeleton key={`contact-` + index} />
             ))}
       </Stack>
     </Stack>

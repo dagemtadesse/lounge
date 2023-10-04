@@ -64,7 +64,7 @@ export const RoomItem = ({
   );
 };
 
-export const RoomItemeleton = () => {
+export const RoomItemSkeleton = () => {
   return (
     <Card
       sx={{

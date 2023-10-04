@@ -5,6 +5,7 @@ import { Stack } from "@mui/material";
 import { SideBar } from "@/components/layout/SideBar";
 import { CreateChatRoomModal } from "@/components/modals/CreateChatRoomModal";
 import { ChatWindow } from "@/components/chat/ChatWindow";
+import { ContactsModal } from "@/components/contact/ContactModal";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
         <ChatWindow />
       </Stack>
       <CreateChatRoomModal />
+      <ContactsModal/>
     </AuthGuard>
   );
 }

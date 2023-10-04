@@ -1,10 +1,18 @@
-import { Paper, Toolbar, Stack, Avatar, Typography, Skeleton, IconButton } from "@mui/material";
+import {
+  Paper,
+  Toolbar,
+  Stack,
+  Avatar,
+  Typography,
+  Skeleton,
+  IconButton,
+} from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Room } from "@prisma/client";
 
 export function ChatWindowToolbar({ room }: { room?: Room | null }) {
   return (
-    <Paper elevation={2}>
+    <Paper elevation={0} sx={{}}>
       <Toolbar variant="dense" sx={{ p: 1.5, px: 1 }}>
         <Stack
           direction={"row"}
