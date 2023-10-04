@@ -1,4 +1,4 @@
-import { prisma } from "../context";
+import { prisma } from "../db";
 import { router } from "../trpc";
 import { authRouter } from "./authentication";
 import { chatRoomRouter } from "./chatRoom";

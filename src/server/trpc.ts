@@ -1,6 +1,9 @@
 import { initTRPC, TRPCError } from "@trpc/server";
+import { EventEmitter } from "stream";
 import superjson from "superjson";
 import { createContext } from "./context";
+
+export const eventEmitter = new EventEmitter();
 
 export const t = initTRPC
   .context<typeof createContext>()

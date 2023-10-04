@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && prisma migrate deploy && next build",
+    "dev:wss": "tsx watch src/server/wsServer.ts --tsconfig tsconfig.server.json ",
     "start": "next start",
     "lint": "next lint"
   },
@@ -35,12 +36,15 @@
     "react-dom": "18.2.0",
     "react-redux": "^8.1.2",
     "superjson": "^1.13.3",
-    "typescript": "5.2.2",
+    "ws": "^8.14.2",
     "zod": "^3.22.2",
     "zod-formik-adapter": "^1.2.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
-    "prisma": "5.3.1"
+    "@types/ws": "^8.5.6",
+    "prisma": "5.3.1",
+    "tsx": "^3.13.0",
+    "typescript": "5.2.2"
   }
 }
