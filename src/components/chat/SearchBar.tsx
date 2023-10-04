@@ -26,9 +26,13 @@ export const SearchBar = () => {
           size="small"
           value={query}
           onChange={(e) => dispatch(setQuery(e.target.value))}
-          placeholder="Search for Contacts and Chat Rooms"
+          placeholder="Search for chats"
           InputProps={{
-            sx: {},
+            sx: {
+              bgcolor: "rgba(255,255,255,0.2)",
+              border: 0,
+              borderRadius: 100,
+            },
             endAdornment: (
               <InputAdornment position="end">
                 <Search />
