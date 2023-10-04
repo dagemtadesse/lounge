@@ -2,8 +2,7 @@
 
 import { trpc } from "@/app/_trpc/client";
 import { useAppSelector } from "@/store";
-import { Box, Stack } from "@mui/material";
-import { red } from "@mui/material/colors";
+import { Stack } from "@mui/material";
 import { Contacts } from "../contacts/Contacts";
 import { RecentChats } from "./Rooms";
 import { SearchBar } from "./SearchBar";
@@ -27,8 +26,8 @@ export const SideBar = () => {
       <SearchBar />
       <Stack
         sx={{
-          width: '100%',
-          flexGrow: 1, 
+          width: "100%",
+          flexGrow: 1,
           overflow: "scroll",
         }}
       >

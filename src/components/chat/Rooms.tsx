@@ -7,6 +7,7 @@ import {
   Avatar,
   Collapse,
   Skeleton,
+  Box,
 } from "@mui/material";
 import { Room } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
@@ -16,38 +17,39 @@ export const RecentChats = ({ data }: { data?: Room[] }) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
   return (
-    <Stack gap={1}>
-      <Stack
-        direction="row"
-        justifyContent={"space-between"}
-        alignItems="bottom"
-        px={1.5}
-      >
-        <Button
-          sx={{ px: 2 }}
-          onClick={() => setIsExpanded((val) => !val)}
-          color="secondary"
-        >
-          <Typography variant="subtitle2">Recent Chats</Typography>
-        </Button>
-      </Stack>
-      <Collapse in={isExpanded}>
-        <Stack
-          direction={"row"}
-          gap={2}
+    <Stack
+      sx={{
+        bgcolor: "rgba(255,255,255,0.05)",
+        px: 1.5,
+        py: 1,
+        alignItems: "start",
+      }}
+    >
+      <Button sx={{ px: 2 }} onClick={() => setIsExpanded((val) => !val)}>
+        <Typography variant="subtitle2">Recent Chats</Typography>
+      </Button>
+
+      <Collapse in={isExpanded} sx={{ width: "100%" }}>
+        <Box
           sx={{
             width: "100%",
-            bgcolor: "rgba(255,255,255,0.05)",
-            px: 1.5,
-            py: 2,
+            display: "grid",
+            gridTemplateColumns: "repeat(3, 1fr)",
+            py: 0.5,
+            gap: 1,
+            mt: 1,
           }}
-          flexWrap={"wrap"}
         >
           {data?.map((room, index) => (
-            <ChatRoomButton key={`Rooms_` + index} room={room} />
-            // <ChatRoomButtonSkeleton key={`Rooms_` + index} />
+            <ChatRoomButton room={room} key={room.id} />
           ))}
-        </Stack>
+          {!data &&
+            Array(6)
+              .fill(0)
+              .map((_, index) => (
+                <ChatRoomButtonSkeleton key={`recent-chatroom-${index}`} />
+              ))}
+        </Box>
       </Collapse>
     </Stack>
   );
@@ -60,7 +62,7 @@ export const ChatRoomButton = ({ room }: { room: Room }) => {
   return (
     <Button
       color="secondary"
-      sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+      sx={{ display: "flex", flexDirection: "column", gap: 1, width: "100%" }}
       onClick={() => router.push(`${path}?roomId=${room.id}`)}
     >
       <Avatar
@@ -74,7 +76,7 @@ export const ChatRoomButton = ({ room }: { room: Room }) => {
         {room.emojiIcon || room.name[0].toUpperCase()}
       </Avatar>
       <Typography
-        variant="body2"
+        variant="caption"
         component={"p"}
         sx={{
           textOverflow: "ellipsis",
