@@ -14,7 +14,6 @@ import { useState } from "react";
 
 export const RecentChats = ({ data }: { data?: Room[] }) => {
   const [isExpanded, setIsExpanded] = useState(true);
-  const chatRooms = "abcdef".split("");
 
   return (
     <Stack gap={1}>
@@ -24,28 +23,25 @@ export const RecentChats = ({ data }: { data?: Room[] }) => {
         alignItems="bottom"
         px={1.5}
       >
-        <Typography variant="subtitle2">Recent Chats</Typography>
         <Button
-          color="secondary"
-          size="small"
+          sx={{ px: 2 }}
           onClick={() => setIsExpanded((val) => !val)}
+          color="secondary"
         >
-          <Typography
-            variant="body2"
-            sx={{ textTransform: "none" }}
-            color="grey.500"
-          >
-            {isExpanded ? "Hide" : "Show"}
-          </Typography>
+          <Typography variant="subtitle2">Recent Chats</Typography>
         </Button>
       </Stack>
       <Collapse in={isExpanded}>
         <Stack
           direction={"row"}
           gap={2}
-          sx={{ width: "100%" }}
+          sx={{
+            width: "100%",
+            bgcolor: "rgba(255,255,255,0.05)",
+            px: 1.5,
+            py: 2,
+          }}
           flexWrap={"wrap"}
-          px={1.5}
         >
           {data?.map((room, index) => (
             <ChatRoomButton key={`Rooms_` + index} room={room} />

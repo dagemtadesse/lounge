@@ -71,7 +71,7 @@ model Room {
   updatedAt   DateTime         @updatedAt
   createBy    User             @relation(fields: [createdById], references: [id])
   memberships RoomMembership[]
-  Message     Message[]
+  messages     Message[]
 }
 
 model RoomMembership {
@@ -95,7 +95,7 @@ model Message {
   author        User?           @relation(fields: [authorId], references: [id])
   roomId        String
   room          Room            @relation(fields: [roomId], references: [id])
-  MessageStatus MessageStatus[]
+  messageStatus MessageStatus[]
 }
 
 model MessageStatus {

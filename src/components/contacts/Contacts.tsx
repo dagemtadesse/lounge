@@ -1,8 +1,9 @@
 "use client";
 
+import { trpc } from "@/app/_trpc/client";
 import { Box, Slide, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { useState } from "react";
-import { ContactSkeleton } from "./Contacttem";
+import { ContactItem, ContactSkeleton } from "./ContactItem";
 
 function a11yProps(index: number) {
   return {
@@ -19,8 +20,12 @@ export const Contacts = () => {
     setValue(newValue);
   };
 
+  const { data: myRooms } = trpc.chatRoom.getMyRooms.useQuery({});
+
+  console.log(myRooms);
+
   return (
-    <Stack gap={2}>
+    <Stack>
       <Box
         sx={{
           borderBottom: 1,
@@ -29,7 +34,7 @@ export const Contacts = () => {
           top: 0,
           bgcolor: "background.default",
           zIndex: 100,
-          px: 1.5
+          px: 1.5,
         }}
       >
         <Tabs
@@ -48,13 +53,15 @@ export const Contacts = () => {
         </Tabs>
       </Box>
 
-      <Slide direction="left" in={value == 1} mountOnEnter unmountOnExit>
-        <Stack px={1.5}>
-          {contacts.map((contact, index) => (
-            <ContactSkeleton key={`contact-` + index} />
-          ))}
-        </Stack>
-      </Slide>
+      <Stack>
+        {Boolean(myRooms)
+          ? myRooms?.map((room, index) => (
+              <ContactItem room={room} key={room.id} />
+            ))
+          : contacts.map((_, index) => (
+              <ContactSkeleton key={`contact-` + index} />
+            ))}
+      </Stack>
     </Stack>
   );
 };

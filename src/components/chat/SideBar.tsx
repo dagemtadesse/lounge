@@ -26,7 +26,6 @@ export const SideBar = () => {
     >
       <SearchBar />
       <Stack
-        gap={3}
         sx={{
           width: '100%',
           flexGrow: 1, 
