@@ -2,7 +2,7 @@
 
 import { AuthGuard } from "@/components/AuthGuard";
 import { Stack } from "@mui/material";
-import { SideBar } from "@/components/chat/SideBar";
+import { SideBar } from "@/components/layout/SideBar";
 import { CreateChatRoomModal } from "@/components/modals/CreateChatRoomModal";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 

@@ -41,13 +41,13 @@ export const RecentChats = ({ data }: { data?: Room[] }) => {
           }}
         >
           {data?.map((room, index) => (
-            <ChatRoomButton room={room} key={room.id} />
+            <RecentChatButton room={room} key={room.id} />
           ))}
           {!data &&
             Array(6)
               .fill(0)
               .map((_, index) => (
-                <ChatRoomButtonSkeleton key={`recent-chatroom-${index}`} />
+                <RecentChatButtonSkeleton key={`recent-chatroom-${index}`} />
               ))}
         </Box>
       </Collapse>
@@ -55,7 +55,7 @@ export const RecentChats = ({ data }: { data?: Room[] }) => {
   );
 };
 
-export const ChatRoomButton = ({ room }: { room: Room }) => {
+export const RecentChatButton = ({ room }: { room: Room }) => {
   const router = useRouter();
   const path = usePathname();
 
@@ -92,7 +92,7 @@ export const ChatRoomButton = ({ room }: { room: Room }) => {
   );
 };
 
-export const ChatRoomButtonSkeleton = () => {
+export const RecentChatButtonSkeleton = () => {
   return (
     <Button
       color="secondary"

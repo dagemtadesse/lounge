@@ -3,9 +3,9 @@
 import { trpc } from "@/app/_trpc/client";
 import { useAppSelector } from "@/store";
 import { Stack } from "@mui/material";
-import { Contacts } from "../contacts/Contacts";
-import { RecentChats } from "./Rooms";
-import { SearchBar } from "./SearchBar";
+import { RoomList } from "../room/RoomList";
+import { RecentChats } from "../room/RecentRooms";
+import { SearchBar } from "../chat/SearchBar";
 
 export const SideBar = () => {
   const { query } = useAppSelector((state) => state.chatRoom);
@@ -32,7 +32,7 @@ export const SideBar = () => {
         }}
       >
         <RecentChats data={filteredRooms.data} />
-        <Contacts />
+        <RoomList />
       </Stack>
     </Stack>
   );

@@ -11,7 +11,7 @@ import {
 import { Message, Room } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
 
-export const ContactItem = ({
+export const RoomItem = ({
   room,
 }: {
   room: Room & { messages: Message[] };
@@ -64,7 +64,7 @@ export const ContactItem = ({
   );
 };
 
-export const ContactSkeleton = () => {
+export const RoomItemeleton = () => {
   return (
     <Card
       sx={{

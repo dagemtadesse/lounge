@@ -3,7 +3,7 @@
 import { trpc } from "@/app/_trpc/client";
 import { Box, Slide, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { useState } from "react";
-import { ContactItem, ContactSkeleton } from "./ContactItem";
+import { RoomItem, RoomItemeleton } from "./RoomItem";
 
 function a11yProps(index: number) {
   return {
@@ -12,7 +12,7 @@ function a11yProps(index: number) {
   };
 }
 
-export const Contacts = () => {
+export const RoomList = () => {
   const [value, setValue] = useState(0);
   const contacts = Array(25).fill(5);
 
@@ -56,10 +56,10 @@ export const Contacts = () => {
       <Stack>
         {Boolean(myRooms)
           ? myRooms?.map((room, index) => (
-              <ContactItem room={room} key={room.id} />
+              <RoomItem room={room} key={room.id} />
             ))
           : contacts.map((_, index) => (
-              <ContactSkeleton key={`contact-` + index} />
+              <RoomItemeleton key={`contact-` + index} />
             ))}
       </Stack>
     </Stack>
