@@ -11,7 +11,11 @@ export const chatRoomRouter = router({
       try {
         const userId = ctx.session!.userId;
         const room = await ctx.prisma.room.create({
-          data: { ...input, createdById: userId },
+          data: {
+            ...input,
+            createdById: userId,
+            memberships: { create: { userId } },
+          },
         });
 
         return room;
@@ -28,6 +32,34 @@ export const chatRoomRouter = router({
 
         throw e;
       }
+    }),
+
+  createPersonalRoom: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input: otherUserId }) => {
+      const userId = ctx.session!.userId;
+
+      const personalRoom = await ctx.prisma.room.findFirst({
+        include: { memberships: true },
+        where: {
+          isPersonal: true,
+          AND: [
+            { memberships: { some: { userId } } },
+            { memberships: { some: { userId: otherUserId } } },
+          ],
+        },
+      });
+
+      if (personalRoom) throw new TRPCError({ code: "CONFLICT" });
+
+      return await ctx.prisma.room.create({
+        data: {
+          isPersonal: true,
+          createdById: userId,
+          name: ``,
+          memberships: { create: [{ userId }, { userId: otherUserId }] },
+        },
+      });
     }),
 
   searchRoom: protectedProcedure

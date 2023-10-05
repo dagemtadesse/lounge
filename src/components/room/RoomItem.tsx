@@ -26,7 +26,7 @@ export const RoomItem = ({
   let IconStyle: SxProps = {};
 
   if (room.emojiIcon) {
-    IconStyle = { bgcolor: "transparent", fontSize: '40px' };
+    IconStyle = { bgcolor: "transparent", fontSize: "40px" };
   }
 
   return (
@@ -70,7 +70,8 @@ export const RoomItemSkeleton = () => {
       sx={{
         bgcolor: "transparent",
         backgroundImage: "none",
-        p: 0,
+        px: 1.5,
+        py: 1,
         boxShadow: 0,
       }}
     >

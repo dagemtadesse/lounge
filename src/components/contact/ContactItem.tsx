@@ -1,7 +1,30 @@
-import { Button, Skeleton, Stack } from "@mui/material";
+import { Avatar, Button, Skeleton, Stack, Typography } from "@mui/material";
+import { User } from "@prisma/client";
 
-export const ContactItem = () => {
-  return <></>;
+export const ContactItem = ({
+  user,
+  onClick,
+}: {
+  user: User;
+  onClick: () => void;
+}) => {
+  return (
+    <Button
+      sx={{ width: "100%", px: 3, py: 1.5 }}
+      color="secondary"
+      onClick={onClick}
+    >
+      <Stack direction="row" gap={2} width="100%">
+        <Avatar></Avatar>
+        <Stack flexGrow={1} sx={{ textAlign: "start" }} justifyContent="center">
+          <Typography>{user.name}</Typography>
+          <Typography variant="body2" color="grey.300">
+            {user.email}
+          </Typography>
+        </Stack>
+      </Stack>
+    </Button>
+  );
 };
 
 export const ContactItemSkeleton = () => {
