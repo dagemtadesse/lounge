@@ -66,19 +66,20 @@ model Room {
   handle      String?          @unique
   emojiIcon   String?
   isPublic    Boolean          @default(false)
+  isPersonal  Boolean          @default(false)
   createdById String
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   createBy    User             @relation(fields: [createdById], references: [id])
   memberships RoomMembership[]
-  messages     Message[]
+  messages    Message[]
 }
 
 model RoomMembership {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   roomId    String
-  Room      Room     @relation(fields: [roomId], references: [id])
+  room      Room     @relation(fields: [roomId], references: [id])
   userId    String
   user      User     @relation(fields: [userId], references: [id])
 
