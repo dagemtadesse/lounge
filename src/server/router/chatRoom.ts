@@ -106,6 +106,8 @@ export const chatRoomRouter = router({
     .query(async ({ ctx, input }) => {
       const userId = ctx.session!.userId;
 
+      // every: { userId, viewed: true }
+
       return ctx.prisma.room.findMany({
         include: {
           memberships: {
@@ -115,6 +117,19 @@ export const chatRoomRouter = router({
           messages: {
             take: 1,
             orderBy: { createdAt: "desc" },
+          },
+          _count: {
+            select: {
+              messages: {
+                where: {
+                  NOT: {
+                    messageStatus: {
+                      some: { userId, viewed: true },
+                    },
+                  },
+                },
+              },
+            },
           },
         },
         where: {

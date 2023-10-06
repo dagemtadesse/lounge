@@ -15,8 +15,10 @@ import { usePathname, useRouter } from "next/navigation";
 export const RoomItem = ({
   room,
   altName,
+  unreadMessages
 }: {
   room: Room & { messages: Message[] };
+  unreadMessages: number;
   altName: string | null;
 }) => {
   const router = useRouter();
@@ -87,7 +89,7 @@ export const RoomItem = ({
                 {lastmessage?.content}
               </Typography>
               <Badge
-                badgeContent={400}
+                badgeContent={unreadMessages}
                 color="primary"
                 sx={{
                   "& .MuiBadge-badge": {

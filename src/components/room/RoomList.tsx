@@ -60,6 +60,7 @@ export const RoomList = () => {
               <RoomItem
                 room={room}
                 key={room.id}
+                unreadMessages={room._count.messages}
                 altName={
                   room.memberships[0]?.user?.name ??
                   room.memberships[0]?.user?.email

@@ -13,6 +13,7 @@ export const messageRouter = router({
           authorId,
           content,
           roomId,
+          messageStatus: { create: [{ viewed: true, userId: authorId }] },
         },
       });
 
