@@ -65,7 +65,7 @@ export const Bubble = ({
       <Stack
         sx={{
           width: "auto",
-          maxWidth: "50%",
+          maxWidth: { xs: "90%", md: "50%" },
           bgcolor,
           color: fromOthers ? "white" : "black",
           ml: nextMessageAuthrorId == message.authorId ? "40px" : 0,

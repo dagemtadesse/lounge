@@ -21,6 +21,7 @@ import { CreateChatRoomModal } from "../modals/CreateChatRoomModal";
 import { openModal } from "@/store/reducers/modals";
 import { useAppDispatch } from "@/store";
 import { ContactsModal } from "../contact/ContactModal";
+import zIndex from "@mui/material/styles/zIndex";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -40,50 +41,52 @@ export const Header = () => {
   return (
     <AppBar
       sx={{
-        height: { sx: "auto", md: "100vh" },
-        width: "auto",
-        left: 0,
-        right: "auto",
+        flexGrow: 0,
+        height: { xs: "auto", sm: "100%" },
+        width: { xs: "100%", sm: "auto" },
         background:
           "linear-gradient(0deg,rgba(209,225,255,.08),rgba(209,225,255,.08)),#1f1f1f",
       }}
       position="relative"
       elevation={0}
-      color="primary"
     >
       <Stack
         sx={{
           p: 0.5,
-          flexDirection: { xs: "row", md: "column" },
+          flexDirection: { xs: "row", sm: "column" },
           justifyContent: "space-between",
           height: "100%",
           width: "100%",
         }}
+        alignItems="center"
       >
-        <Stack>
-          <Link href={ROUTES.HOME}>
-            <Button
-              color="secondary"
-              sx={{
-                display: { sm: "inline-flex", md: "block" },
-                alignItems: "center",
-                gap: 2,
-              }}
+        <Link href={ROUTES.HOME}>
+          <Button
+            color="secondary"
+            sx={{
+              display: { xs: "inline-flex", sm: "block" },
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <Logo />
+            <Typography
+              variant="subtitle2"
+              fontWeight={"bold"}
+              textTransform="none"
             >
-              <Logo />
-              <Typography
-                variant="subtitle2"
-                fontWeight={"bold"}
-                textTransform="none"
-              >
-                Lounge
-              </Typography>
-            </Button>
-          </Link>
-        </Stack>
+              Lounge
+            </Typography>
+          </Button>
+        </Link>
 
         {data && (
-          <Stack sx={{ mx: { md: "auto" } }} alignItems="center" gap={4}>
+          <Stack
+            sx={{ mx: { md: "auto" } }}
+            alignItems="center"
+            gap={4}
+            direction={{ xs: "row", sm: "column" }}
+          >
             <Fab
               size="small"
               onClick={() => dispatch(openModal(CreateChatRoomModal.name))}
