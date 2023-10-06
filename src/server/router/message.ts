@@ -16,8 +16,13 @@ export const messageRouter = router({
         },
       });
 
+      await ctx.prisma.room.update({
+        where: { id: roomId },
+        data: { updatedAt: new Date() },
+      });
+
       eventEmitter.emit(roomId, message);
-      
+
       return message;
     }),
 
