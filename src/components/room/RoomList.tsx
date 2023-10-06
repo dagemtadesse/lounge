@@ -1,7 +1,7 @@
 "use client";
 
 import { trpc } from "@/app/_trpc/client";
-import { Box, Slide, Stack, Tab, Tabs, Typography } from "@mui/material";
+import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { useState } from "react";
 import { RoomItem, RoomItemSkeleton } from "./RoomItem";
 
@@ -20,8 +20,11 @@ export const RoomList = () => {
     setValue(newValue);
   };
 
-  const { data: myRooms } = trpc.chatRoom.getMyRooms.useQuery({});
+  const { data: myRooms } = trpc.chatRoom.getMyRooms.useQuery({
+    isPersonal: value == 0,
+  });
 
+  console.log(myRooms);
   return (
     <Stack>
       <Box
@@ -54,7 +57,14 @@ export const RoomList = () => {
       <Stack>
         {Boolean(myRooms)
           ? myRooms?.map((room, index) => (
-              <RoomItem room={room} key={room.id} />
+              <RoomItem
+                room={room}
+                key={room.id}
+                altName={
+                  room.memberships[0]?.user?.name ??
+                  room.memberships[0]?.user?.email
+                }
+              />
             ))
           : contacts.map((_, index) => (
               <RoomItemSkeleton key={`contact-` + index} />

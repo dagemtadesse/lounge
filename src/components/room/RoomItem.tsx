@@ -7,19 +7,22 @@ import {
   Typography,
   Stack,
   SxProps,
+  Badge,
 } from "@mui/material";
 import { Message, Room } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
 
 export const RoomItem = ({
   room,
+  altName,
 }: {
   room: Room & { messages: Message[] };
+  altName: string | null;
 }) => {
   const router = useRouter();
   const path = usePathname();
 
-  const lastmessage = room.messages?.[0]?.content;
+  const lastmessage = room.messages?.[0];
 
   const roomIcon = room.emojiIcon || room.name?.[0];
 
@@ -31,35 +34,72 @@ export const RoomItem = ({
 
   return (
     <Button
-      sx={{ display: "block" }}
+      sx={{ display: "block", textAlign: "start" }}
       color="secondary"
       onClick={() => router.push(`${path}?roomId=${room.id}`)}
     >
-      <Card
-        sx={{
-          px: 1.5,
-          py: 1,
-          borderRadius: 0,
-          boxShadow: 0,
-          width: "100%",
-          bgcolor: "transparent",
-        }}
-        elevation={0}
+      <Stack
+        direction={"row"}
+        gap={2}
+        alignItems="center"
+        sx={{ overflow: "hidden", py: 1, px: 1.5 }}
       >
-        <Stack direction={"row"} gap={2} alignItems="center">
-          <Avatar sx={IconStyle} aria-label="recipe">
-            {roomIcon}
-          </Avatar>
-          <Stack alignItems={"start"} gap={0.5}>
-            <Typography variant="body2">{room.name}</Typography>
-            {Boolean(lastmessage) && (
-              <Typography variant="body2" sx={{ color: "grey.500" }}>
-                {lastmessage}
+        <Avatar sx={IconStyle} aria-label="recipe">
+          {roomIcon}
+        </Avatar>
+
+        <Stack
+          alignItems={"start"}
+          gap={0.5}
+          sx={{ width: "100%", overflow: "hidden" }}
+        >
+          <Stack
+            direction={"row"}
+            justifyContent="space-between"
+            sx={{ width: "100%" }}
+          >
+            <Typography variant="body2">{room.name || altName}</Typography>
+            {lastmessage && (
+              <Typography variant="caption">
+                {Intl.DateTimeFormat("en-US", {
+                  dateStyle: undefined,
+                  timeStyle: "short",
+                }).format(lastmessage.createdAt)}
               </Typography>
             )}
           </Stack>
+          {Boolean(lastmessage) && (
+            <Stack
+              direction="row"
+              justifyContent={"space-between"}
+              sx={{ width: "100%", gap: 1 }}
+            >
+              <Typography
+                variant="caption"
+                sx={{
+                  flexGrow: 1,
+                  color: "grey.500",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {lastmessage?.content}
+              </Typography>
+              <Badge
+                badgeContent={400}
+                color="primary"
+                sx={{
+                  "& .MuiBadge-badge": {
+                    position: "relative",
+                    transform: "none",
+                  },
+                }}
+              ></Badge>
+            </Stack>
+          )}
         </Stack>
-      </Card>
+      </Stack>
     </Button>
   );
 };
@@ -90,3 +130,11 @@ export const RoomItemSkeleton = () => {
     </Card>
   );
 };
+
+// px: 1.5,
+//           py: 1,
+//           borderRadius: 0,
+//           boxShadow: 0,
+//           width: "100%",
+//           bgcolor: "transparent",
+//           overflow: 'hidden'

@@ -1,5 +1,3 @@
-import { Message } from "@prisma/client";
-import { observable } from "@trpc/server/observable";
 import { z } from "zod";
 import { eventEmitter, protectedProcedure, router } from "../trpc";
 

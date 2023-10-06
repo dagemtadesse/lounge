@@ -102,18 +102,22 @@ export const chatRoomRouter = router({
     }),
 
   getMyRooms: protectedProcedure
-    .input(z.object({}))
+    .input(z.object({ isPersonal: z.boolean() }))
     .query(async ({ ctx, input }) => {
       const userId = ctx.session!.userId;
       return ctx.prisma.room.findMany({
         include: {
-          memberships: true,
+          memberships: {
+            where: { userId: { not: userId } },
+            include: { user: true },
+          },
           messages: {
             take: 1,
             orderBy: { createdAt: "desc" },
           },
         },
         where: {
+          isPersonal: input.isPersonal,
           memberships: { some: { userId } },
         },
       });
