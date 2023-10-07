@@ -15,6 +15,7 @@ import { blue } from "@mui/material/colors";
 import { Room } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { RoomItemContextMenu } from "./RoomItemContextMenu";
 
 export const RecentChats = ({ data }: { data?: Room[] }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -63,11 +64,33 @@ export const RecentChatButton = ({ room }: { room: Room }) => {
   const router = useRouter();
   const path = usePathname();
 
+  const [contextMenu, setContextMenu] = useState<{
+    mouseX: number;
+    mouseY: number;
+  } | null>(null);
+
+  const handleContextMenu = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setContextMenu(
+      contextMenu === null
+        ? {
+            mouseX: event.clientX + 2,
+            mouseY: event.clientY - 6,
+          }
+        : null
+    );
+  };
+
+  const handleClose = () => {
+    setContextMenu(null);
+  };
+
   return (
     <Button
       color="secondary"
       sx={{ display: "flex", flexDirection: "column", gap: 1, width: "100%" }}
       onClick={() => router.push(`${path}?roomId=${room.id}`)}
+      onContextMenu={handleContextMenu}
     >
       <Avatar
         sx={{
@@ -92,6 +115,11 @@ export const RecentChatButton = ({ room }: { room: Room }) => {
       >
         {room.name}
       </Typography>
+
+      <RoomItemContextMenu
+        handleClose={handleClose}
+        contextMenu={contextMenu}
+      />
     </Button>
   );
 };

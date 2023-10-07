@@ -24,7 +24,6 @@ export const RoomList = () => {
     isPersonal: value == 0,
   });
 
-  console.log(myRooms);
   return (
     <Stack>
       <Box

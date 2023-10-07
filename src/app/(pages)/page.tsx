@@ -18,8 +18,6 @@ export default function Home() {
 
   const open = !roomId || matches;
 
-  console.log(open);
-
   return (
     <AuthGuard require="loggedIn">
       <Stack sx={{ flexGrow: 1, position: "relative" }} direction="row">

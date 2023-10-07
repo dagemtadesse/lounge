@@ -8,6 +8,8 @@ import {
   Typography,
 } from "@mui/material";
 import { Message, User } from "@prisma/client";
+import React, { useState } from "react";
+import { BubbleContextMenu } from "./BubbleContextMenu";
 
 export const Bubble = ({
   message,
@@ -16,12 +18,33 @@ export const Bubble = ({
   message: Message & { author: User | null };
   nextMessageAuthrorId?: string | null;
 }) => {
+  const [contextMenu, setContextMenu] = useState<{
+    mouseX: number;
+    mouseY: number;
+  } | null>(null);
+
+  const handleContextMenu = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setContextMenu(
+      contextMenu === null
+        ? {
+            mouseX: event.clientX + 2,
+            mouseY: event.clientY - 6,
+          }
+        : null
+    );
+  };
+
   const fromOthers = message.author != null;
 
   const borderRadius: SxProps = { borderRadius: 6 };
 
   if (fromOthers) borderRadius.borderBottomLeftRadius = 8;
   else borderRadius.borderBottomRightRadius = 8;
+
+  const handleClose = () => {
+    setContextMenu(null);
+  };
 
   const bgcolor = fromOthers ? "#434243" : "primary.main";
 
@@ -56,6 +79,7 @@ export const Bubble = ({
       gap={1}
       justifyContent={fromOthers ? "start" : "end"}
       alignItems={"end"}
+      sx={{ cursor: "pointer" }}
     >
       {fromOthers && nextMessageAuthrorId != message.authorId && (
         <Box sx={{ position: "relative", zIndex: 100 }}>
@@ -76,6 +100,7 @@ export const Bubble = ({
         }}
         gap={1}
         alignItems={fromOthers ? "start" : "end"}
+        onContextMenu={handleContextMenu}
       >
         <Box sx={{ position: "relative", zIndex: 100 }}>
           <Typography variant="body2">{message.content}</Typography>
@@ -83,6 +108,8 @@ export const Bubble = ({
 
         {fromOthers && nextMessageAuthrorId != message.authorId && tail}
       </Stack>
+
+      <BubbleContextMenu handleClose={handleClose} contextMenu={contextMenu} />
     </Stack>
   );
 };

@@ -11,11 +11,13 @@ import {
 } from "@mui/material";
 import { Message, Room } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
+import { useState } from "react";
+import { RoomItemContextMenu } from "./RoomItemContextMenu";
 
 export const RoomItem = ({
   room,
   altName,
-  unreadMessages
+  unreadMessages,
 }: {
   room: Room & { messages: Message[] };
   unreadMessages: number;
@@ -30,6 +32,27 @@ export const RoomItem = ({
 
   let IconStyle: SxProps = {};
 
+  const [contextMenu, setContextMenu] = useState<{
+    mouseX: number;
+    mouseY: number;
+  } | null>(null);
+
+  const handleContextMenu = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setContextMenu(
+      contextMenu === null
+        ? {
+            mouseX: event.clientX + 2,
+            mouseY: event.clientY - 6,
+          }
+        : null
+    );
+  };
+
+  const handleClose = () => {
+    setContextMenu(null);
+  };
+
   if (room.emojiIcon) {
     IconStyle = { bgcolor: "transparent", fontSize: "40px" };
   }
@@ -39,6 +62,7 @@ export const RoomItem = ({
       sx={{ display: "block", textAlign: "start" }}
       color="secondary"
       onClick={() => router.push(`${path}?roomId=${room.id}`)}
+      onContextMenu={handleContextMenu}
     >
       <Stack
         direction={"row"}
@@ -102,6 +126,11 @@ export const RoomItem = ({
           )}
         </Stack>
       </Stack>
+
+      <RoomItemContextMenu
+        handleClose={handleClose}
+        contextMenu={contextMenu}
+      />
     </Button>
   );
 };
@@ -132,11 +161,3 @@ export const RoomItemSkeleton = () => {
     </Card>
   );
 };
-
-// px: 1.5,
-//           py: 1,
-//           borderRadius: 0,
-//           boxShadow: 0,
-//           width: "100%",
-//           bgcolor: "transparent",
-//           overflow: 'hidden'
