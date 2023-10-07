@@ -80,6 +80,16 @@ export const chatRoomRouter = router({
       await ctx.prisma.message.deleteMany({ where: { roomId: room.id } });
     }),
 
+  delete: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input: roomId }) => {
+      const userId = ctx.session!.userId;
+
+      return await ctx.prisma.room.delete({
+        where: { createdById: userId, id: roomId },
+      });
+    }),
+
   searchRoom: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input: query }) => {

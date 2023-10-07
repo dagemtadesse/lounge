@@ -19,17 +19,26 @@ export const RoomItemContextMenu = ({
 }) => {
   const utils = trpc.useContext();
   const { mutateAsync: clearHistory } = trpc.chatRoom.clear.useMutation();
+  const { mutateAsync: deleteChat } = trpc.chatRoom.delete.useMutation();
 
+  const onSuccess = () => {
+    utils.messages.getByRoomId.invalidate();
+    utils.chatRoom.getMyRooms.invalidate();
+  };
+  
   const handleClearHistory = async () => {
-    console.log(contextMenu?.data);
     if (contextMenu?.data) {
       try {
-        await clearHistory(contextMenu.data.id, {
-          onSuccess: () => {
-            utils.messages.getByRoomId.invalidate();
-            utils.chatRoom.getMyRooms.invalidate();
-          },
-        });
+        await clearHistory(contextMenu.data.id, { onSuccess });
+      } catch (error) {}
+      handleClose();
+    }
+  };
+
+  const handleDeleteChat = async () => {
+    if (contextMenu?.data) {
+      try {
+        await deleteChat(contextMenu.data.id, { onSuccess });
       } catch (error) {}
       handleClose();
     }
@@ -57,9 +66,11 @@ export const RoomItemContextMenu = ({
         <ListItemIcon>
           <DeleteIcon fontSize="small" color="error" />
         </ListItemIcon>
-        <Typography variant="body2" color="error.main">Clear History</Typography>
+        <Typography variant="body2" color="error.main">
+          Clear History
+        </Typography>
       </MenuItem>
-      <MenuItem onClick={handleClose} color="">
+      <MenuItem onClick={handleDeleteChat} color="">
         <ListItemIcon>
           <RemoveCircleOutlineIcon fontSize="small" color="error" />
         </ListItemIcon>
