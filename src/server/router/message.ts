@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { eventEmitter, protectedProcedure, router } from "../trpc";
 
@@ -41,6 +42,19 @@ export const messageRouter = router({
         },
       });
     }),
+
+  delete: protectedProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
+    const userId = ctx.session!.userId;
+
+    const deletedMessage = await ctx.prisma.message.delete({
+      where: {
+        authorId: userId,
+        id: input,
+      },
+    });
+
+    return deletedMessage;
+  }),
 
   // new: protectedProcedure
   //   .input(z.string())

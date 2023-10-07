@@ -9,28 +9,31 @@ import {
   Typography,
 } from "@mui/material";
 import { Message, User } from "@prisma/client";
-import React, { useState } from "react";
-import { BubbleContextMenu } from "./BubbleContextMenu";
+import React, { Dispatch, SetStateAction } from "react";
 
 export const Bubble = ({
   message,
   nextMessageAuthrorId,
+  setContextMenu,
 }: {
   message: Message & { author: User | null };
   nextMessageAuthrorId?: string | null;
+  setContextMenu: Dispatch<
+    SetStateAction<{
+      mouseX: number;
+      mouseY: number;
+      data: any;
+    } | null>
+  >;
 }) => {
-  const [contextMenu, setContextMenu] = useState<{
-    mouseX: number;
-    mouseY: number;
-  } | null>(null);
-
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
-    setContextMenu(
+    setContextMenu((contextMenu) =>
       contextMenu === null
         ? {
             mouseX: event.clientX + 2,
             mouseY: event.clientY - 6,
+            data: message,
           }
         : null
     );
@@ -42,10 +45,6 @@ export const Bubble = ({
 
   if (fromOthers) borderRadius.borderBottomLeftRadius = 8;
   else borderRadius.borderBottomRightRadius = 8;
-
-  const handleClose = () => {
-    setContextMenu(null);
-  };
 
   const bgcolor = fromOthers ? "#434243" : "primary.main";
 
@@ -132,11 +131,6 @@ export const Bubble = ({
             {formatDate(message.updatedAt)}
           </Typography>
         </Box>
-
-        <BubbleContextMenu
-          handleClose={handleClose}
-          contextMenu={contextMenu}
-        />
       </Stack>
     </Stack>
   );
