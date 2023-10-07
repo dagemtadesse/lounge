@@ -11,17 +11,20 @@ import {
 } from "@mui/material";
 import { Message, Room } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
-import { RoomItemContextMenu } from "./RoomItemContextMenu";
+import { Dispatch, SetStateAction, useState } from "react";
 
 export const RoomItem = ({
   room,
   altName,
   unreadMessages,
+  setContextMenu,
 }: {
   room: Room & { messages: Message[] };
   unreadMessages: number;
   altName: string | null;
+  setContextMenu: Dispatch<
+    SetStateAction<{ mouseX: number; mouseY: number; data?: Room } | null>
+  >;
 }) => {
   const router = useRouter();
   const path = usePathname();
@@ -32,30 +35,22 @@ export const RoomItem = ({
 
   let IconStyle: SxProps = {};
 
-  const [contextMenu, setContextMenu] = useState<{
-    mouseX: number;
-    mouseY: number;
-  } | null>(null);
+  if (room.emojiIcon) {
+    IconStyle = { bgcolor: "transparent", fontSize: "40px" };
+  }
 
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
-    setContextMenu(
+    setContextMenu((contextMenu) =>
       contextMenu === null
         ? {
             mouseX: event.clientX + 2,
             mouseY: event.clientY - 6,
+            data: room,
           }
         : null
     );
   };
-
-  const handleClose = () => {
-    setContextMenu(null);
-  };
-
-  if (room.emojiIcon) {
-    IconStyle = { bgcolor: "transparent", fontSize: "40px" };
-  }
 
   return (
     <Button
@@ -126,11 +121,6 @@ export const RoomItem = ({
           )}
         </Stack>
       </Stack>
-
-      <RoomItemContextMenu
-        handleClose={handleClose}
-        contextMenu={contextMenu}
-      />
     </Button>
   );
 };

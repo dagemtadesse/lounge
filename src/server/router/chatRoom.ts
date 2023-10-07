@@ -62,6 +62,24 @@ export const chatRoomRouter = router({
       });
     }),
 
+  clear: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input: roomId }) => {
+      const userId = ctx.session!.userId;
+
+      const room = await ctx.prisma.room.findUnique({
+        where: {
+          id: roomId,
+          isPersonal: true,
+          memberships: { some: { userId } },
+        },
+      });
+
+      if (!room) throw new TRPCError({ code: "NOT_FOUND" });
+
+      await ctx.prisma.message.deleteMany({ where: { roomId: room.id } });
+    }),
+
   searchRoom: protectedProcedure
     .input(z.string())
     .query(async ({ ctx, input: query }) => {

@@ -2,7 +2,8 @@
 
 import { trpc } from "@/app/_trpc/client";
 import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
-import { useState } from "react";
+import { Room } from "@prisma/client";
+import { Dispatch, SetStateAction, useState } from "react";
 import { RoomItem, RoomItemSkeleton } from "./RoomItem";
 
 function a11yProps(index: number) {
@@ -12,7 +13,13 @@ function a11yProps(index: number) {
   };
 }
 
-export const RoomList = () => {
+export const RoomList = ({
+  setContextMenu,
+}: {
+  setContextMenu: Dispatch<
+    SetStateAction<{ mouseX: number; mouseY: number; data?: Room } | null>
+  >;
+}) => {
   const [value, setValue] = useState(0);
   const contacts = Array(25).fill(5);
 
@@ -60,6 +67,7 @@ export const RoomList = () => {
                 room={room}
                 key={room.id}
                 unreadMessages={room._count.messages}
+                setContextMenu={setContextMenu}
                 altName={
                   room.memberships[0]?.user?.name ??
                   room.memberships[0]?.user?.email

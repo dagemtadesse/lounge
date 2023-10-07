@@ -14,10 +14,18 @@ import {
 import { blue } from "@mui/material/colors";
 import { Room } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { RoomItemContextMenu } from "./RoomItemContextMenu";
 
-export const RecentChats = ({ data }: { data?: Room[] }) => {
+export const RecentChats = ({
+  data,
+  setContextMenu
+}: {
+  data?: Room[];
+  setContextMenu: Dispatch<
+    SetStateAction<{ mouseX: number; mouseY: number; data?: Room } | null>
+  >;
+}) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const theme = useTheme();
 
@@ -46,7 +54,7 @@ export const RecentChats = ({ data }: { data?: Room[] }) => {
           }}
         >
           {data?.map((room, index) => (
-            <RecentChatButton room={room} key={room.id} />
+            <RecentChatButton room={room} key={room.id} setContextMenu={setContextMenu} />
           ))}
           {!data &&
             Array(6)
@@ -60,29 +68,29 @@ export const RecentChats = ({ data }: { data?: Room[] }) => {
   );
 };
 
-export const RecentChatButton = ({ room }: { room: Room }) => {
+export const RecentChatButton = ({
+  room,
+  setContextMenu,
+}: {
+  room: Room;
+  setContextMenu: Dispatch<
+    SetStateAction<{ mouseX: number; mouseY: number; data?: Room } | null>
+  >;
+}) => {
   const router = useRouter();
   const path = usePathname();
 
-  const [contextMenu, setContextMenu] = useState<{
-    mouseX: number;
-    mouseY: number;
-  } | null>(null);
-
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
-    setContextMenu(
+    setContextMenu((contextMenu) =>
       contextMenu === null
         ? {
             mouseX: event.clientX + 2,
             mouseY: event.clientY - 6,
+            data: room,
           }
         : null
     );
-  };
-
-  const handleClose = () => {
-    setContextMenu(null);
   };
 
   return (
@@ -115,11 +123,6 @@ export const RecentChatButton = ({ room }: { room: Room }) => {
       >
         {room.name}
       </Typography>
-
-      <RoomItemContextMenu
-        handleClose={handleClose}
-        contextMenu={contextMenu}
-      />
     </Button>
   );
 };

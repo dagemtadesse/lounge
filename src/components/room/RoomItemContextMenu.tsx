@@ -1,8 +1,10 @@
 import { Menu, MenuItem, ListItemIcon, Typography } from "@mui/material";
-import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import ReplyIcon from "@mui/icons-material/Reply";
+import { Room } from "@prisma/client";
+import { trpc } from "@/app/_trpc/client";
 
 export const RoomItemContextMenu = ({
   contextMenu,
@@ -11,9 +13,28 @@ export const RoomItemContextMenu = ({
   contextMenu: {
     mouseX: number;
     mouseY: number;
+    data?: Room;
   } | null;
   handleClose: () => void;
 }) => {
+  const utils = trpc.useContext();
+  const { mutateAsync: clearHistory } = trpc.chatRoom.clear.useMutation();
+
+  const handleClearHistory = async () => {
+    console.log(contextMenu?.data);
+    if (contextMenu?.data) {
+      try {
+        await clearHistory(contextMenu.data.id, {
+          onSuccess: () => {
+            utils.messages.getByRoomId.invalidate();
+            utils.chatRoom.getMyRooms.invalidate();
+          },
+        });
+      } catch (error) {}
+      handleClose();
+    }
+  };
+
   return (
     <Menu
       open={contextMenu !== null}
@@ -32,15 +53,15 @@ export const RoomItemContextMenu = ({
         </ListItemIcon>
         <Typography variant="body2">Mark all as Read</Typography>
       </MenuItem>
-      <MenuItem onClick={handleClose}>
+      <MenuItem onClick={handleClearHistory}>
         <ListItemIcon>
-          <EditIcon fontSize="small" />
+          <DeleteIcon fontSize="small" color="error" />
         </ListItemIcon>
-        <Typography variant="body2">Clear History</Typography>
+        <Typography variant="body2" color="error.main">Clear History</Typography>
       </MenuItem>
       <MenuItem onClick={handleClose} color="">
         <ListItemIcon>
-          <DeleteIcon fontSize="small" color="error" />
+          <RemoveCircleOutlineIcon fontSize="small" color="error" />
         </ListItemIcon>
         <Typography variant="body2" color="error.main">
           Delete Chat
