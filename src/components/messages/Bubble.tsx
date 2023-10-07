@@ -1,3 +1,4 @@
+import { formatDate } from "@/utils/date";
 import {
   Avatar,
   Box,
@@ -73,43 +74,70 @@ export const Bubble = ({
     </Box>
   );
 
+  //
   return (
-    <Stack
-      direction="row"
-      gap={1}
-      justifyContent={fromOthers ? "start" : "end"}
-      alignItems={"end"}
-      sx={{ cursor: "pointer" }}
-    >
-      {fromOthers && nextMessageAuthrorId != message.authorId && (
-        <Box sx={{ position: "relative", zIndex: 100 }}>
-          <Avatar sx={{ width: 32, height: 32 }}></Avatar>
-        </Box>
-      )}
+    <Stack sx={{}}>
       <Stack
-        sx={{
-          width: "auto",
-          maxWidth: { xs: "90%", md: "50%" },
-          bgcolor,
-          color: fromOthers ? "white" : "black",
-          ml: nextMessageAuthrorId == message.authorId ? "40px" : 0,
-          position: "relative",
-          py: 1,
-          px: 2,
-          ...borderRadius,
-        }}
+        direction={fromOthers ? "row" : "row-reverse"}
         gap={1}
-        alignItems={fromOthers ? "start" : "end"}
-        onContextMenu={handleContextMenu}
+        alignItems={"end"}
+        sx={{ cursor: "pointer" }}
       >
-        <Box sx={{ position: "relative", zIndex: 100 }}>
-          <Typography variant="body2">{message.content}</Typography>
+        {fromOthers && nextMessageAuthrorId != message.authorId && (
+          <Box sx={{ position: "relative", zIndex: 110 }}>
+            <Avatar sx={{ width: 32, height: 32 }}></Avatar>
+          </Box>
+        )}
+
+        <Box
+          sx={{
+            width: "auto",
+            maxWidth: { xs: "90%", md: "50%" },
+            position: "relative",
+            ml:
+              nextMessageAuthrorId == message.authorId && fromOthers
+                ? "40px"
+                : 0,
+          }}
+        >
+          <Stack
+            sx={{
+              bgcolor,
+              color: fromOthers ? "white" : "black",
+              position: "relative",
+              py: 1,
+              px: 2,
+              zIndex: 100,
+              ...borderRadius,
+            }}
+            gap={1}
+            alignItems={fromOthers ? "start" : "end"}
+            onContextMenu={handleContextMenu}
+          >
+            <Typography variant="body2">{message.content}</Typography>
+
+            {fromOthers && nextMessageAuthrorId != message.authorId && tail}
+          </Stack>
+          <Typography
+            variant="caption"
+            component="div"
+            mt={1}
+            sx={{
+              color: "grey.500",
+              position: "absolute",
+              whiteSpace: "nowrap",
+              right: fromOthers ? "auto" : "0",
+            }}
+          >
+            {formatDate(message.updatedAt)}
+          </Typography>
         </Box>
 
-        {fromOthers && nextMessageAuthrorId != message.authorId && tail}
+        <BubbleContextMenu
+          handleClose={handleClose}
+          contextMenu={contextMenu}
+        />
       </Stack>
-
-      <BubbleContextMenu handleClose={handleClose} contextMenu={contextMenu} />
     </Stack>
   );
 };

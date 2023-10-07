@@ -1,5 +1,5 @@
 import { trpc } from "@/app/_trpc/client";
-import { Stack } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 import { Room } from "@prisma/client";
 import { useEffect, useRef } from "react";
 import { Bubble, BubbleSkeleton } from "./Bubble";
@@ -23,21 +23,17 @@ export const MessageBoard = ({ room }: { room: Room | undefined | null }) => {
     <Stack
       sx={{
         flexGrow: 1,
-        height: "100%",
-        justifyContent: "end",
-        overflow: "hidden",
+        overflow: "scroll",
+        height: "auto",
       }}
+      ref={container}
     >
       <Stack
-        gap={1}
-        ref={container}
+        gap={4}
         sx={{
           px: 3,
           py: 2,
           width: "100%",
-          minHeight: "auto",
-          maxHeight: "100%",
-          overflow: "scroll",
         }}
       >
         {!messages

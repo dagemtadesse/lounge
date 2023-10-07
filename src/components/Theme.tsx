@@ -30,6 +30,7 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: "'Public Sans', sans-serif",
+    fontSize: 13,
     button: {
       textTransform: "none",
     },
