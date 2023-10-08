@@ -16,6 +16,7 @@ import { Room } from "@prisma/client";
 import { trpc } from "@/app/_trpc/client";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { setActiveMessage } from "@/store/reducers/chatRoom";
+import { useEffect } from "react";
 
 export const MessageForm = ({ room }: { room: Room }) => {
   const utils = trpc.useContext();
@@ -34,7 +35,7 @@ export const MessageForm = ({ room }: { room: Room }) => {
     dispatch(setActiveMessage(undefined));
   };
 
-  const { handleChange, handleSubmit, values } = useFormik({
+  const { handleChange, handleSubmit, values, setValues } = useFormik({
     initialValues: { message: "" },
     onSubmit: async (values, { resetForm }) => {
       try {
@@ -51,6 +52,12 @@ export const MessageForm = ({ room }: { room: Room }) => {
       } catch (err) {}
     },
   });
+
+  useEffect(() => {
+    if (activeMessage && activeMessage.action == "edit") {
+      setValues({ message: activeMessage.data.content });
+    }
+  }, [activeMessage, setValues]);
 
   return (
     <form onSubmit={handleSubmit}>
