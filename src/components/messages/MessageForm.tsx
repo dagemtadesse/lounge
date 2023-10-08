@@ -16,17 +16,38 @@ import { Room } from "@prisma/client";
 import { trpc } from "@/app/_trpc/client";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { setActiveMessage } from "@/store/reducers/chatRoom";
-import { relative } from "path";
 
 export const MessageForm = ({ room }: { room: Room }) => {
-  const { mutateAsync } = trpc.messages.create.useMutation();
+  const utils = trpc.useContext();
 
-  const { handleChange, handleSubmit, handleReset, values } = useFormik({
+  const { mutateAsync } = trpc.messages.create.useMutation();
+  const { mutateAsync: editMessage } = trpc.messages.edit.useMutation({
+    onSuccess: () => {
+      utils.messages.getByRoomId.invalidate();
+    },
+  });
+
+  const dispatch = useAppDispatch();
+  const { activeMessage } = useAppSelector((state) => state.chatRoom);
+
+  const handleClose = () => {
+    dispatch(setActiveMessage(undefined));
+  };
+
+  const { handleChange, handleSubmit, values } = useFormik({
     initialValues: { message: "" },
     onSubmit: async (values, { resetForm }) => {
       try {
-        await mutateAsync({ roomId: room!.id, content: values.message });
+        if (activeMessage) {
+          if (activeMessage.action == "edit") {
+            editMessage({ id: activeMessage.data.id, content: values.message });
+          } else if (activeMessage.action == "reply") {
+          }
+        } else {
+          await mutateAsync({ roomId: room!.id, content: values.message });
+        }
         resetForm();
+        handleClose();
       } catch (err) {}
     },
   });
@@ -41,7 +62,6 @@ export const MessageForm = ({ room }: { room: Room }) => {
             overflow: "hidden",
             position: "relative",
             borderRadius: 3,
-            gap: 1,
           }}
         >
           <ActiveMessagePaper />

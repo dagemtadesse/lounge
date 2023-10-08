@@ -86,6 +86,17 @@ export const messageRouter = router({
       });
     }),
 
+  edit: protectedProcedure
+    .input(z.object({ id: z.string(), content: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session!.userId;
+
+      return await ctx.prisma.message.update({
+        where: { authorId: userId, id: input.id },
+        data: { content: input.content, isEdited: true },
+      });
+    }),
+
   // new: protectedProcedure
   //   .input(z.string())
   //   .subscription(({ ctx, input: roomId }) => {

@@ -129,6 +129,7 @@ export const Bubble = ({
             }}
           >
             {formatDate(message.updatedAt)}
+            {message.isEdited && " (Edited)"}
           </Typography>
         </Box>
       </Stack>
