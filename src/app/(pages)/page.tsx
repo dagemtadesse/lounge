@@ -20,7 +20,10 @@ export default function Home() {
 
   return (
     <AuthGuard require="loggedIn">
-      <Stack sx={{ flexGrow: 1, position: "relative" }} direction="row">
+      <Stack
+        sx={{ flexGrow: 1, position: "relative", overflow: "hidden" }}
+        direction="row"
+      >
         <Slide in={open} direction="right">
           <Stack
             sx={{
@@ -42,7 +45,7 @@ export default function Home() {
             p: 0,
             height: "100%",
             flexGrow: 1,
-            width: {},
+            overflow: "hidden",
           }}
           elevation={0}
         >

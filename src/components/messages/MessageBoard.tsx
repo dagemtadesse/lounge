@@ -35,18 +35,19 @@ export const MessageBoard = ({ room }: { room: Room | undefined | null }) => {
       <Stack
         sx={{
           flexGrow: 1,
-          overflow: "scroll",
+          overflow: "hidden",
           height: "auto",
-          justifyContent: 'end'
+          justifyContent: "end",
         }}
-        ref={container}
       >
         <Stack
+          ref={container}
           gap={4}
           sx={{
             px: 3,
             py: 2,
             width: "100%",
+            overflowY: "scroll",
           }}
         >
           {!messages

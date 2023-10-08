@@ -4,6 +4,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ReplyIcon from "@mui/icons-material/Reply";
 import { trpc } from "@/app/_trpc/client";
 import { Message } from "@prisma/client";
+import { useAppDispatch, useAppSelector } from "@/store";
+import { setActiveMessage } from "@/store/reducers/chatRoom";
 
 export const BubbleContextMenu = ({
   contextMenu,
@@ -16,6 +18,8 @@ export const BubbleContextMenu = ({
   } | null;
   handleClose: () => void;
 }) => {
+  const dispatch = useAppDispatch();
+
   const utils = trpc.useContext();
 
   const { mutateAsync: deleteMessage } = trpc.messages.delete.useMutation({
@@ -33,6 +37,16 @@ export const BubbleContextMenu = ({
     }
   };
 
+  const handleEdit = () => {
+    dispatch(setActiveMessage({ data: contextMenu!.data, action: "edit" }));
+    handleClose();
+  };
+
+  const handleReply = () => {
+    dispatch(setActiveMessage({ data: contextMenu!.data, action: "reply" }));
+    handleClose();
+  };
+
   return (
     <Menu
       open={contextMenu !== null}
@@ -45,13 +59,13 @@ export const BubbleContextMenu = ({
       }
       PaperProps={{ sx: { width: 160, maxWidth: "90%" } }}
     >
-      <MenuItem onClick={handleClose}>
+      <MenuItem onClick={handleReply}>
         <ListItemIcon>
           <ReplyIcon fontSize="small" />
         </ListItemIcon>
         <Typography variant="body2">Reply</Typography>
       </MenuItem>
-      <MenuItem onClick={handleClose}>
+      <MenuItem onClick={handleEdit}>
         <ListItemIcon>
           <EditIcon fontSize="small" />
         </ListItemIcon>
