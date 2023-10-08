@@ -36,9 +36,13 @@ export const messageRouter = router({
       return await ctx.prisma.message.findMany({
         where: { roomId: input },
         include: {
+          parentMessage: { include: { author: true } },
           author: {
             where: { NOT: { id: userId } },
           },
+        },
+        orderBy: {
+          createdAt: "asc",
         },
       });
     }),
@@ -94,6 +98,29 @@ export const messageRouter = router({
       return await ctx.prisma.message.update({
         where: { authorId: userId, id: input.id },
         data: { content: input.content, isEdited: true },
+      });
+    }),
+
+  reply: protectedProcedure
+    .input(
+      z.object({
+        content: z.string(),
+        roomId: z.string(),
+        parentId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      const authorId = ctx.session!.userId;
+      const { content, roomId, parentId } = input;
+
+      await ctx.prisma.message.create({
+        data: {
+          authorId,
+          content,
+          roomId,
+          parentId,
+          messageStatus: { create: [{ viewed: true, userId: authorId }] },
+        },
       });
     }),
 

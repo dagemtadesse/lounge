@@ -1,5 +1,6 @@
 import { formatDate } from "@/utils/date";
 import {
+  alpha,
   Avatar,
   Box,
   Paper,
@@ -7,16 +8,19 @@ import {
   Stack,
   SxProps,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { Message, User } from "@prisma/client";
 import React, { Dispatch, SetStateAction } from "react";
+
+type MessageWithAuthor = (Message & { author: User | null }) | null;
 
 export const Bubble = ({
   message,
   nextMessageAuthrorId,
   setContextMenu,
 }: {
-  message: Message & { author: User | null };
+  message: Message & { author: User | null; parentMessage: MessageWithAuthor };
   nextMessageAuthrorId?: string | null;
   setContextMenu: Dispatch<
     SetStateAction<{
@@ -46,7 +50,8 @@ export const Bubble = ({
   if (fromOthers) borderRadius.borderBottomLeftRadius = 8;
   else borderRadius.borderBottomRightRadius = 8;
 
-  const bgcolor = fromOthers ? "#434243" : "primary.main";
+  const theme = useTheme();
+  const bgcolor = fromOthers ? "#434243" : alpha(theme.palette.primary.main, 1);
 
   const tail = (
     <Box
@@ -91,7 +96,7 @@ export const Bubble = ({
         <Box
           sx={{
             width: "auto",
-            maxWidth: { xs: "90%", md: "50%" },
+            maxWidth: { xs: "90%", md: "75", lg: "60%" },
             position: "relative",
             ml:
               nextMessageAuthrorId == message.authorId && fromOthers
@@ -110,9 +115,15 @@ export const Bubble = ({
               ...borderRadius,
             }}
             gap={1}
-            alignItems={fromOthers ? "start" : "end"}
+            alignItems={"start"}
             onContextMenu={handleContextMenu}
           >
+            {message.parentMessage && (
+              <ReplyBanner
+                message={message.parentMessage}
+                fromOther={fromOthers}
+              />
+            )}
             <Typography variant="body2">{message.content}</Typography>
 
             {fromOthers && nextMessageAuthrorId != message.authorId && tail}
@@ -133,6 +144,51 @@ export const Bubble = ({
           </Typography>
         </Box>
       </Stack>
+    </Stack>
+  );
+};
+
+export const ReplyBanner = ({
+  message,
+  fromOther,
+}: {
+  message: Message & { author: User | null };
+  fromOther: boolean;
+}) => {
+  return (
+    <Stack
+      sx={{
+        borderLeft: 3,
+        borderColor: fromOther ? "white" : "black",
+        width: "100%",
+        px: 1,
+        py: 0.5,
+      }}
+      gap={1}
+    >
+      <Typography
+        variant="subtitle2"
+        sx={{
+          lineHeight: 1,
+          fontWeight: "medium",
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
+      >
+        {message?.author?.email}
+      </Typography>
+      <Typography
+        variant="body2"
+        sx={{
+          lineHeight: 1,
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+        }}
+      >
+        {message?.content}
+      </Typography>
     </Stack>
   );
 };

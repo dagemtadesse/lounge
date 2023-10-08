@@ -28,6 +28,12 @@ export const MessageForm = ({ room }: { room: Room }) => {
     },
   });
 
+  const { mutateAsync: reply } = trpc.messages.reply.useMutation({
+    onSuccess: () => {
+      utils.messages.getByRoomId.invalidate();
+    },
+  });
+
   const dispatch = useAppDispatch();
   const { activeMessage } = useAppSelector((state) => state.chatRoom);
 
@@ -41,17 +47,29 @@ export const MessageForm = ({ room }: { room: Room }) => {
       try {
         if (activeMessage) {
           if (activeMessage.action == "edit") {
-            editMessage({ id: activeMessage.data.id, content: values.message });
+            await editMessage({
+              id: activeMessage.data.id,
+              content: values.message,
+            });
           } else if (activeMessage.action == "reply") {
+            await reply({
+              content: values.message,
+              roomId: room.id,
+              parentId: activeMessage.data.id,
+            });
           }
         } else {
           await mutateAsync({ roomId: room!.id, content: values.message });
         }
         resetForm();
         handleClose();
-      } catch (err) {}
+      } catch (err) {
+        console.log(err);
+      }
     },
   });
+
+  console.log(activeMessage);
 
   useEffect(() => {
     if (activeMessage && activeMessage.action == "edit") {
@@ -156,7 +174,7 @@ export const ActiveMessagePaper = () => {
             }}
           >
             {activeMessage?.action == "reply"
-              ? activeMessage?.data.content
+              ? activeMessage?.data.author?.email || "You"
               : "Edit Message"}
           </Typography>
           <Typography

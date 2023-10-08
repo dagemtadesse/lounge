@@ -97,6 +97,9 @@ model Message {
   roomId        String
   room          Room            @relation(fields: [roomId], references: [id])
   messageStatus MessageStatus[]
+  parentId      String?
+  parentMessage Message?        @relation("parentMessage", fields: [parentId], references: [id])
+  replyMessages Message[]       @relation("parentMessage")
 }
 
 model MessageStatus {

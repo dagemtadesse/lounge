@@ -1,10 +1,10 @@
-import { Message } from "@prisma/client";
+import { Message, User } from "@prisma/client";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type ChatRoomSlice = {
   query: string;
   activeMessage?: {
-    data: Message;
+    data: Message & { author: User | null };
     action: "reply" | "edit";
   };
 };
@@ -25,7 +25,7 @@ export const chatRoomSlice = createSlice({
       state,
       action: PayloadAction<
         | {
-            data: Message;
+            data: Message & { author: User | null };
             action: "reply" | "edit";
           }
         | undefined
