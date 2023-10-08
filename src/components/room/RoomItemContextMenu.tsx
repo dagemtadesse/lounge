@@ -1,5 +1,5 @@
 import { Menu, MenuItem, ListItemIcon, Typography } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import ReplyIcon from "@mui/icons-material/Reply";
@@ -20,6 +20,7 @@ export const RoomItemContextMenu = ({
   const utils = trpc.useContext();
   const { mutateAsync: clearHistory } = trpc.chatRoom.clear.useMutation();
   const { mutateAsync: deleteChat } = trpc.chatRoom.delete.useMutation();
+  const { mutateAsync: markAllAsRead } = trpc.messages.markAllAsRead.useMutation();
 
   const onSuccess = () => {
     utils.messages.getByRoomId.invalidate();
@@ -44,6 +45,15 @@ export const RoomItemContextMenu = ({
     }
   };
 
+  const handleMarkAllAsRead = async () => {
+    if (contextMenu?.data) {
+      try {
+        await markAllAsRead(contextMenu.data.id, { onSuccess });
+      } catch (error) {}
+      handleClose();
+    }
+  }
+
   return (
     <Menu
       open={contextMenu !== null}
@@ -56,9 +66,9 @@ export const RoomItemContextMenu = ({
       }
       PaperProps={{ sx: { width: 200, maxWidth: "90%" } }}
     >
-      <MenuItem onClick={handleClose}>
+      <MenuItem onClick={handleMarkAllAsRead}>
         <ListItemIcon>
-          <ReplyIcon fontSize="small" />
+          <VisibilityOutlinedIcon fontSize="small" />
         </ListItemIcon>
         <Typography variant="body2">Mark all as Read</Typography>
       </MenuItem>

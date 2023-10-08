@@ -43,18 +43,48 @@ export const messageRouter = router({
       });
     }),
 
-  delete: protectedProcedure.input(z.string()).mutation(async ({ ctx, input }) => {
-    const userId = ctx.session!.userId;
+  delete: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session!.userId;
 
-    const deletedMessage = await ctx.prisma.message.delete({
-      where: {
-        authorId: userId,
-        id: input,
-      },
-    });
+      const deletedMessage = await ctx.prisma.message.delete({
+        where: {
+          authorId: userId,
+          id: input,
+        },
+      });
 
-    return deletedMessage;
-  }),
+      return deletedMessage;
+    }),
+
+  markAllAsRead: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input: roomId }) => {
+      const userId = ctx.session!.userId;
+
+      const unreadMessages = await ctx.prisma.message.findMany({
+        where: {
+          roomId: roomId,
+          NOT: {
+            messageStatus: {
+              some: { userId, viewed: true },
+            },
+          },
+        },
+      });
+
+      await ctx.prisma.messageStatus.updateMany({
+        where: { message: { roomId }, userId },
+        data: { viewed: true },
+      });
+
+      return await ctx.prisma.messageStatus.createMany({
+        data: unreadMessages.map((msg) => {
+          return { messageId: msg.id, userId, viewed: true };
+        }),
+      });
+    }),
 
   // new: protectedProcedure
   //   .input(z.string())
