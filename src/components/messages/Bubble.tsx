@@ -10,26 +10,28 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import { Message, User } from "@prisma/client";
-import React, { Dispatch, SetStateAction } from "react";
+import { Message, Room, User } from "@prisma/client";
+import React, { Dispatch, SetStateAction, useEffect, useRef } from "react";
 
 type MessageWithAuthor = (Message & { author: User | null }) | null;
+
+export type BubbleProps = {
+  message: Message & { author: User | null; parentMessage: MessageWithAuthor };
+  nextMessageAuthrorId?: string | null;
+  setContextMenu: Dispatch<
+    SetStateAction<{ mouseX: number; mouseY: number; data: any } | null>
+  >;
+  lastItem?: boolean;
+  fetcher?: () => void;
+};
 
 export const Bubble = ({
   message,
   nextMessageAuthrorId,
   setContextMenu,
-}: {
-  message: Message & { author: User | null; parentMessage: MessageWithAuthor };
-  nextMessageAuthrorId?: string | null;
-  setContextMenu: Dispatch<
-    SetStateAction<{
-      mouseX: number;
-      mouseY: number;
-      data: any;
-    } | null>
-  >;
-}) => {
+  lastItem,
+  fetcher,
+}: BubbleProps) => {
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
     setContextMenu((contextMenu) =>
@@ -78,9 +80,25 @@ export const Bubble = ({
     </Box>
   );
 
-  //
+  const elementRef = useRef(null);
+  useEffect(() => {
+    if (elementRef.current == null) return;
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && lastItem) {
+          fetcher?.();
+          observer.disconnect();
+        }
+      });
+    });
+
+    observer.observe(elementRef.current);
+    return () => observer.disconnect();
+  }, [fetcher, lastItem]);
+
   return (
-    <Stack sx={{}}>
+    <Stack sx={{}} ref={elementRef}>
       <Stack
         direction={fromOthers ? "row" : "row-reverse"}
         gap={1}

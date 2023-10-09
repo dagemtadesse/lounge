@@ -1,4 +1,3 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { eventEmitter, protectedProcedure, router } from "../trpc";
 
@@ -29,12 +28,25 @@ export const messageRouter = router({
     }),
 
   getByRoomId: protectedProcedure
-    .input(z.string())
+    .input(
+      z.object({
+        cursor: z.object({ id: z.string(), createdAt: z.date() }).nullish(),
+        roomId: z.string(),
+        size: z.number().nullish(),
+      })
+    )
     .query(async ({ ctx, input }) => {
       const userId = ctx.session!.userId;
+      const limit = input.size ?? 10;
 
-      return await ctx.prisma.message.findMany({
-        where: { roomId: input },
+      const dbCursor = input.cursor
+        ? { createdAt: input.cursor.createdAt, id: input.cursor.id }
+        : undefined;
+
+      const items = await ctx.prisma.message.findMany({
+        where: { roomId: input.roomId },
+        take: limit + 1,
+        cursor: dbCursor,
         include: {
           parentMessage: { include: { author: true } },
           author: {
@@ -42,9 +54,17 @@ export const messageRouter = router({
           },
         },
         orderBy: {
-          createdAt: "asc",
+          createdAt: "desc",
         },
       });
+
+      let nextCursor;
+      if (items.length > limit) {
+        const lastItem = items.pop();
+        nextCursor = { id: lastItem!.id, createdAt: lastItem!.createdAt };
+      }
+
+      return { items, nextCursor };
     }),
 
   delete: protectedProcedure
