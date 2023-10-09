@@ -183,7 +183,7 @@ export const chatRoomRouter = router({
       let nextCursor;
       if (rooms.length > limit) {
         const lastItem = rooms.pop();
-        nextCursor = { id: lastItem!.id, createdAt: lastItem!.createdAt };
+        nextCursor = { id: lastItem!.id, updatedAt: lastItem!.updatedAt };
       }
 
       return { items: rooms, nextCursor };

@@ -19,27 +19,67 @@ export const useRouter = router({
       });
     }),
 
-  contacts: protectedProcedure.query(async ({ ctx }) => {
-    const userId = ctx.session!.userId;
+  contacts: protectedProcedure
+    .input(
+      z.object({
+        cursor: z.object({ email: z.string() }).nullish(),
+        query: z.string(),
+        size: z.number().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session!.userId;
 
-    const contacts = await ctx.prisma.user.findMany({
-      include: {
-        memberships: {
+      const limit = input.size ?? 10;
+      const dbCursor = input.cursor ? { email: input.cursor.email } : undefined;
+
+      const query = {
+        take: limit + 1,
+        cursor: dbCursor,
+      };
+      let items = [];
+
+      if (input.query.trim() !== "") {
+        items = await ctx.prisma.user.findMany({
+          ...query,
+          include: {
+            memberships: {
+              where: {
+                room: { isPersonal: true, memberships: { some: { userId } } },
+              },
+            },
+          },
+          where: { email: { contains: input.query }, id: { not: userId } },
+          orderBy: { email: "asc" },
+        });
+      } else {
+        items = await ctx.prisma.user.findMany({
+          ...query,
+          include: {
+            memberships: {
+              where: {
+                room: { isPersonal: true, memberships: { some: { userId } } },
+              },
+            },
+          },
           where: {
-            room: { isPersonal: true, memberships: { some: { userId } } },
+            id: { not: userId },
+            memberships: {
+              some: {
+                room: { isPersonal: true, memberships: { some: { userId } } },
+              },
+            },
           },
-        },
-      },
-      where: {
-        id: { not: userId },
-        memberships: {
-          some: {
-            room: { isPersonal: true, memberships: { some: { userId } } },
-          },
-        },
-      },
-    });
+          orderBy: { email: "asc" },
+        });
+      }
 
-    return contacts;
-  }),
+      let nextCursor;
+      if (items.length > limit) {
+        const lastItem = items.pop();
+        nextCursor = { email: lastItem!.email };
+      }
+
+      return { items, nextCursor };
+    }),
 });

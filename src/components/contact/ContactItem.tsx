@@ -1,18 +1,22 @@
 import { Avatar, Button, Skeleton, Stack, Typography } from "@mui/material";
 import { User } from "@prisma/client";
+import { RefObject } from "react";
 
 export const ContactItem = ({
   user,
   onClick,
+  paginatorRef,
 }: {
   user: User;
   onClick: () => void;
+  paginatorRef: RefObject<HTMLButtonElement> | undefined;
 }) => {
   return (
     <Button
       sx={{ width: "100%", px: 3, py: 1.5 }}
       color="secondary"
       onClick={onClick}
+      ref={paginatorRef}
     >
       <Stack direction="row" gap={2} width="100%">
         <Avatar></Avatar>
