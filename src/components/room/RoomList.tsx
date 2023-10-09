@@ -1,9 +1,11 @@
 "use client";
 
 import { trpc } from "@/app/_trpc/client";
+import { usePaginator } from "@/hooks/usePaginator";
+import { Pages } from "@mui/icons-material";
 import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { Room } from "@prisma/client";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, Fragment, SetStateAction, useState } from "react";
 import { RoomItem, RoomItemSkeleton } from "./RoomItem";
 
 function a11yProps(index: number) {
@@ -27,9 +29,15 @@ export const RoomList = ({
     setValue(newValue);
   };
 
-  const { data: myRooms } = trpc.chatRoom.getMyRooms.useQuery({
-    isPersonal: value == 0,
-  });
+  const { data: myRooms, fetchNextPage: fetchNextRooms } =
+    trpc.chatRoom.getMyRooms.useInfiniteQuery(
+      { isPersonal: value == 0 },
+      {
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      }
+    );
+
+  const paginatorRef = usePaginator(() => fetchNextRooms());
 
   return (
     <Stack>
@@ -62,17 +70,27 @@ export const RoomList = ({
 
       <Stack>
         {Boolean(myRooms)
-          ? myRooms?.map((room, index) => (
-              <RoomItem
-                room={room}
-                key={room.id}
-                unreadMessages={room._count.messages}
-                setContextMenu={setContextMenu}
-                altName={
-                  room.memberships[0]?.user?.name ??
-                  room.memberships[0]?.user?.email
-                }
-              />
+          ? myRooms?.pages.map((page, index) => (
+              <Fragment key={"rooms-page" + index}>
+                {page.items.map((room, roomIndex) => (
+                  <RoomItem
+                    room={room}
+                    key={room.id}
+                    unreadMessages={room._count.messages}
+                    setContextMenu={setContextMenu}
+                    paginatorRef={
+                      roomIndex + 1 == page.items.length &&
+                      index + 1 == myRooms.pages.length
+                        ? paginatorRef
+                        : undefined
+                    }
+                    altName={
+                      room.memberships[0]?.user?.name ??
+                      room.memberships[0]?.user?.email
+                    }
+                  />
+                ))}
+              </Fragment>
             ))
           : contacts.map((_, index) => (
               <RoomItemSkeleton key={`contact-` + index} />

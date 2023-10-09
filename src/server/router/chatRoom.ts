@@ -130,13 +130,24 @@ export const chatRoomRouter = router({
     }),
 
   getMyRooms: protectedProcedure
-    .input(z.object({ isPersonal: z.boolean() }))
+    .input(
+      z.object({
+        isPersonal: z.boolean(),
+        cursor: z.object({ id: z.string(), updatedAt: z.date() }).nullish(),
+        size: z.number().nullish(),
+      })
+    )
     .query(async ({ ctx, input }) => {
       const userId = ctx.session!.userId;
 
-      // every: { userId, viewed: true }
+      const limit = input.size ?? 10;
+      const dbCursor = input.cursor
+        ? { updatedAt: input.cursor.updatedAt, id: input.cursor.id }
+        : undefined;
 
-      return ctx.prisma.room.findMany({
+      const rooms = await ctx.prisma.room.findMany({
+        take: limit + 1,
+        cursor: dbCursor,
         include: {
           memberships: {
             where: { userId: { not: userId } },
@@ -168,5 +179,13 @@ export const chatRoomRouter = router({
           updatedAt: "desc",
         },
       });
+
+      let nextCursor;
+      if (rooms.length > limit) {
+        const lastItem = rooms.pop();
+        nextCursor = { id: lastItem!.id, createdAt: lastItem!.createdAt };
+      }
+
+      return { items: rooms, nextCursor };
     }),
 });

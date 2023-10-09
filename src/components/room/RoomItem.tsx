@@ -11,13 +11,14 @@ import {
 } from "@mui/material";
 import { Message, Room } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, RefObject, SetStateAction } from "react";
 
 export const RoomItem = ({
   room,
   altName,
   unreadMessages,
   setContextMenu,
+  paginatorRef,
 }: {
   room: Room & { messages: Message[] };
   unreadMessages: number;
@@ -25,6 +26,7 @@ export const RoomItem = ({
   setContextMenu: Dispatch<
     SetStateAction<{ mouseX: number; mouseY: number; data?: Room } | null>
   >;
+  paginatorRef: RefObject<HTMLButtonElement> | undefined;
 }) => {
   const router = useRouter();
   const path = usePathname();
@@ -58,6 +60,7 @@ export const RoomItem = ({
       color="secondary"
       onClick={() => router.push(`${path}?roomId=${room.id}`)}
       onContextMenu={handleContextMenu}
+      ref={paginatorRef}
     >
       <Stack
         direction={"row"}
