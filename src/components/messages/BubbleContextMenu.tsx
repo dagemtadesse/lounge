@@ -6,6 +6,8 @@ import { trpc } from "@/app/_trpc/client";
 import { Message, User } from "@prisma/client";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { setActiveMessage } from "@/store/reducers/chatRoom";
+import { useContext } from "react";
+import { confirmationContext } from "../modals/ConfirmationDialog";
 
 export const BubbleContextMenu = ({
   contextMenu,
@@ -19,6 +21,7 @@ export const BubbleContextMenu = ({
   handleClose: () => void;
 }) => {
   const dispatch = useAppDispatch();
+  const confirmationCtx = useContext(confirmationContext);
 
   const utils = trpc.useContext();
 
@@ -29,12 +32,18 @@ export const BubbleContextMenu = ({
   });
 
   const handleDelete = async () => {
-    if (contextMenu?.data) {
-      try {
-        await deleteMessage(contextMenu.data.id);
-      } catch (error) {}
-      handleClose();
-    }
+    handleClose();
+    confirmationCtx.openModal({
+      title: "Delete",
+      actionName: 'Delete message',
+      description: "Are you sure you want to delete the message?",
+      callback: async () => {
+        if (!contextMenu?.data) return;
+        try {
+          await deleteMessage(contextMenu.data.id);
+        } catch (error) {}
+      },
+    });
   };
 
   const handleEdit = () => {

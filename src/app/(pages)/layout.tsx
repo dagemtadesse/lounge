@@ -1,5 +1,5 @@
 import "../../styles/globals.css";
-import { Box, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 
@@ -9,7 +9,7 @@ import TRPCProvider from "../_trpc/Provider";
 import { Header } from "@/components/layout/Header";
 import { ReduxProvider } from "@/store/Provider";
 import { SnackbarProvider } from "@/components/modals/SnackbarProvider";
-import { blue } from "@mui/material/colors";
+import { ConfirmationModalProvider } from "@/components/modals/ConfirmationDialog";
 
 export const metadata: Metadata = {
   title: "Lounge",
@@ -30,17 +30,19 @@ export default async function RootLayout({
           <TRPCProvider>
             <ReduxProvider>
               <CustomThemeProvider>
-                <Stack
-                  direction={{
-                    xs: "column",
-                    sm: "row",
-                  }}
-                  sx={{ position: "fixed", inset: 0 }}
-                >
-                  <Header />
-                  {children}
-                  <SnackbarProvider />
-                </Stack>
+                <ConfirmationModalProvider>
+                  <Stack
+                    direction={{
+                      xs: "column",
+                      sm: "row",
+                    }}
+                    sx={{ position: "fixed", inset: 0 }}
+                  >
+                    <Header />
+                    {children}
+                    <SnackbarProvider />
+                  </Stack>
+                </ConfirmationModalProvider>
               </CustomThemeProvider>
             </ReduxProvider>
           </TRPCProvider>

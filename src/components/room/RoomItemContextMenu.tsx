@@ -1,10 +1,12 @@
 import { Menu, MenuItem, ListItemIcon, Typography } from "@mui/material";
-import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOutlinedIcon from "@mui/icons-material/VisibilityOutlined";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import ReplyIcon from "@mui/icons-material/Reply";
 import { Room } from "@prisma/client";
 import { trpc } from "@/app/_trpc/client";
+import { useContext } from "react";
+import { confirmationContext } from "../modals/ConfirmationDialog";
 
 export const RoomItemContextMenu = ({
   contextMenu,
@@ -18,31 +20,48 @@ export const RoomItemContextMenu = ({
   handleClose: () => void;
 }) => {
   const utils = trpc.useContext();
+  const confirmationCtx = useContext(confirmationContext);
+
   const { mutateAsync: clearHistory } = trpc.chatRoom.clear.useMutation();
   const { mutateAsync: deleteChat } = trpc.chatRoom.delete.useMutation();
-  const { mutateAsync: markAllAsRead } = trpc.messages.markAllAsRead.useMutation();
+  const { mutateAsync: markAllAsRead } =
+    trpc.messages.markAllAsRead.useMutation();
 
   const onSuccess = () => {
     utils.messages.getByRoomId.invalidate();
     utils.chatRoom.getMyRooms.invalidate();
   };
-  
-  const handleClearHistory = async () => {
-    if (contextMenu?.data) {
-      try {
-        await clearHistory(contextMenu.data.id, { onSuccess });
-      } catch (error) {}
-      handleClose();
-    }
+
+  const handleClearHistory = () => {
+    handleClose();
+    confirmationCtx.openModal({
+      title: "Clear chat history",
+      actionName: "Clear history",
+      description: "Are you sure you want to clear chat history?",
+      callback: async () => {
+        if (contextMenu?.data) {
+          try {
+            await clearHistory(contextMenu.data.id, { onSuccess });
+          } catch (error) {}
+        }
+      },
+    });
   };
 
   const handleDeleteChat = async () => {
-    if (contextMenu?.data) {
-      try {
-        await deleteChat(contextMenu.data.id, { onSuccess });
-      } catch (error) {}
-      handleClose();
-    }
+    handleClose();
+    confirmationCtx.openModal({
+      title: "Delete chat",
+      actionName: "Delete chat",
+      description: "Are you sure you want to delete the chat?",
+      callback: async () => {
+        if (contextMenu?.data) {
+          try {
+            await deleteChat(contextMenu.data.id, { onSuccess });
+          } catch (error) {}
+        }
+      },
+    });
   };
 
   const handleMarkAllAsRead = async () => {
@@ -52,7 +71,7 @@ export const RoomItemContextMenu = ({
       } catch (error) {}
       handleClose();
     }
-  }
+  };
 
   return (
     <Menu
