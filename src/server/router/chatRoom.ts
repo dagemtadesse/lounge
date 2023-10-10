@@ -188,4 +188,31 @@ export const chatRoomRouter = router({
 
       return { items: rooms, nextCursor };
     }),
+
+  recent: protectedProcedure
+    .input(z.object({ size: z.number() }))
+    .query(async ({ ctx, input }) => {
+      const userId = ctx.session!.userId;
+
+      const myrooms = await ctx.prisma.room.findMany({
+        take: input.size,
+        where: {
+          memberships: { some: { userId } },
+        },
+        orderBy: {
+          updatedAt: "desc",
+        },
+        include: {
+          memberships: {
+            where: {
+              userId: { not: userId },
+            },
+            include: { user: true },
+            take: 1,
+          },
+        },
+      });
+
+      return myrooms;
+    }),
 });

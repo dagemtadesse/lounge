@@ -23,7 +23,7 @@ export const SideBar = () => {
     setContextMenu(null);
   };
 
-  const filteredRooms = trpc.chatRoom.searchRoom.useQuery(query);
+  const { data: recentRooms } = trpc.chatRoom.recent.useQuery({ size: 6 });
   return (
     <>
       <SearchBar />
@@ -34,10 +34,7 @@ export const SideBar = () => {
           overflow: "scroll",
         }}
       >
-        <RecentChats
-          data={filteredRooms.data}
-          setContextMenu={setContextMenu}
-        />
+        <RecentChats data={recentRooms} setContextMenu={setContextMenu} />
         <RoomList setContextMenu={setContextMenu} />
 
         <RoomItemContextMenu

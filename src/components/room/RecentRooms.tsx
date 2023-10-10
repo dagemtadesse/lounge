@@ -8,31 +8,29 @@ import {
   Collapse,
   Skeleton,
   Box,
-  useTheme,
-  alpha,
 } from "@mui/material";
-import { blue } from "@mui/material/colors";
-import { Room } from "@prisma/client";
+import { Room, RoomMembership, User } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useState } from "react";
-import { RoomItemContextMenu } from "./RoomItemContextMenu";
+
+type RoomWithMembers = Room & {
+  memberships: (RoomMembership & { user: User })[];
+};
 
 export const RecentChats = ({
   data,
-  setContextMenu
+  setContextMenu,
 }: {
-  data?: Room[];
+  data?: RoomWithMembers[];
   setContextMenu: Dispatch<
     SetStateAction<{ mouseX: number; mouseY: number; data?: Room } | null>
   >;
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
-  const theme = useTheme();
 
   return (
     <Stack
       sx={{
-        // bgcolor: alpha(blue[500], 0.05),
         px: 1.5,
         py: 1,
         alignItems: "start",
@@ -54,7 +52,11 @@ export const RecentChats = ({
           }}
         >
           {data?.map((room, index) => (
-            <RecentChatButton room={room} key={room.id} setContextMenu={setContextMenu} />
+            <RecentChatButton
+              room={room}
+              key={room.id}
+              setContextMenu={setContextMenu}
+            />
           ))}
           {!data &&
             Array(6)
@@ -72,7 +74,7 @@ export const RecentChatButton = ({
   room,
   setContextMenu,
 }: {
-  room: Room;
+  room: RoomWithMembers;
   setContextMenu: Dispatch<
     SetStateAction<{ mouseX: number; mouseY: number; data?: Room } | null>
   >;
@@ -93,6 +95,9 @@ export const RecentChatButton = ({
     );
   };
 
+  let recipient: User | undefined;
+  if (room.isPersonal) recipient = room.memberships?.[0].user;
+
   return (
     <Button
       color="secondary"
@@ -108,7 +113,7 @@ export const RecentChatButton = ({
           bgcolor: Boolean(room.emojiIcon) ? "transparent" : "grey.300",
         }}
       >
-        {room.emojiIcon || room.name[0].toUpperCase()}
+        {room.emojiIcon || room.name[0]?.toUpperCase()}
       </Avatar>
       <Typography
         variant="caption"
@@ -121,7 +126,7 @@ export const RecentChatButton = ({
           width: "100%",
         }}
       >
-        {room.name}
+        {recipient ? recipient.email ?? "Chat Room" : room.name}
       </Typography>
     </Button>
   );
