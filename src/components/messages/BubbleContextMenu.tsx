@@ -3,7 +3,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ReplyIcon from "@mui/icons-material/Reply";
 import { trpc } from "@/app/_trpc/client";
-import { Message } from "@prisma/client";
+import { Message, User } from "@prisma/client";
 import { useAppDispatch, useAppSelector } from "@/store";
 import { setActiveMessage } from "@/store/reducers/chatRoom";
 
@@ -14,7 +14,7 @@ export const BubbleContextMenu = ({
   contextMenu: {
     mouseX: number;
     mouseY: number;
-    data: Message;
+    data: Message & { author: User | null };
   } | null;
   handleClose: () => void;
 }) => {

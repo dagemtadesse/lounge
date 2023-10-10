@@ -1,7 +1,7 @@
 import { trpc } from "@/app/_trpc/client";
 import { LastPage, Pages } from "@mui/icons-material";
 import { Stack } from "@mui/material";
-import { Message, Room } from "@prisma/client";
+import { Message, Room, User } from "@prisma/client";
 import { Fragment, useEffect, useRef, useState } from "react";
 import { Bubble, BubbleSkeleton } from "./Bubble";
 import { BubbleContextMenu } from "./BubbleContextMenu";
@@ -23,7 +23,7 @@ export const MessageBoard = ({ room }: { room: Room | undefined | null }) => {
   const [contextMenu, setContextMenu] = useState<{
     mouseX: number;
     mouseY: number;
-    data: Message;
+    data: Message & { author: User | null };
   } | null>(null);
 
   const handleClose = () => {
