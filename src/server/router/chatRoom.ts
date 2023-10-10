@@ -135,6 +135,7 @@ export const chatRoomRouter = router({
         isPersonal: z.boolean(),
         cursor: z.object({ id: z.string(), updatedAt: z.date() }).nullish(),
         size: z.number().nullish(),
+        query: z.string(),
       })
     )
     .query(async ({ ctx, input }) => {
@@ -144,6 +145,31 @@ export const chatRoomRouter = router({
       const dbCursor = input.cursor
         ? { updatedAt: input.cursor.updatedAt, id: input.cursor.id }
         : undefined;
+
+      const query = input.query.trim();
+      const isSearching = query != "";
+
+      const personalChatRoomFilter: Prisma.RoomWhereInput = {
+        memberships: {
+          some: {
+            userId: isSearching ? undefined : userId,
+            user: isSearching ? { email: { contains: query } } : undefined,
+          },
+        },
+      };
+
+      const groupChatRoomFilter: Prisma.RoomWhereInput = {
+        memberships: {
+          some: isSearching ? undefined : { userId },
+        },
+        OR: isSearching
+          ? [{ handle: { contains: query } }, { name: { contains: query } }]
+          : undefined,
+      };
+
+      const filter: Prisma.RoomWhereInput = input.isPersonal
+        ? personalChatRoomFilter
+        : groupChatRoomFilter;
 
       const rooms = await ctx.prisma.room.findMany({
         take: limit + 1,
@@ -173,7 +199,7 @@ export const chatRoomRouter = router({
         },
         where: {
           isPersonal: input.isPersonal,
-          memberships: { some: { userId } },
+          ...filter,
         },
         orderBy: {
           updatedAt: "desc",

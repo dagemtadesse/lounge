@@ -1,5 +1,6 @@
 "use client";
 
+import { useAppSelector } from "@/store";
 import {
   Stack,
   Typography,
@@ -11,7 +12,7 @@ import {
 } from "@mui/material";
 import { Room, RoomMembership, User } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 type RoomWithMembers = Room & {
   memberships: (RoomMembership & { user: User })[];
@@ -27,7 +28,12 @@ export const RecentChats = ({
   >;
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
+  const { query } = useAppSelector((state) => state.chatRoom);
 
+  useEffect(() => {
+    setIsExpanded(query.trim() == "");
+  }, [query]);
+  
   return (
     <Stack
       sx={{

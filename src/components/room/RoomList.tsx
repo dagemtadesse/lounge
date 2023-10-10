@@ -2,6 +2,7 @@
 
 import { trpc } from "@/app/_trpc/client";
 import { usePaginator } from "@/hooks/usePaginator";
+import { useAppSelector } from "@/store";
 import { Pages } from "@mui/icons-material";
 import { Box, Stack, Tab, Tabs, Typography } from "@mui/material";
 import { Room } from "@prisma/client";
@@ -25,13 +26,15 @@ export const RoomList = ({
   const [value, setValue] = useState(0);
   const contacts = Array(25).fill(5);
 
+  const { query } = useAppSelector((state) => state.chatRoom);
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
   const { data: myRooms, fetchNextPage: fetchNextRooms } =
     trpc.chatRoom.getMyRooms.useInfiniteQuery(
-      { isPersonal: value == 0 },
+      { isPersonal: value == 0, query },
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
       }

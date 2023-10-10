@@ -1,7 +1,6 @@
 "use client";
 
 import { trpc } from "@/app/_trpc/client";
-import { useAppSelector } from "@/store";
 import { Stack } from "@mui/material";
 import { RoomList } from "../room/RoomList";
 import { RecentChats } from "../room/RecentRooms";
@@ -11,8 +10,6 @@ import { useState } from "react";
 import { Room } from "@prisma/client";
 
 export const SideBar = () => {
-  const { query } = useAppSelector((state) => state.chatRoom);
-
   const [contextMenu, setContextMenu] = useState<{
     mouseX: number;
     mouseY: number;

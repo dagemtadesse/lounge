@@ -51,7 +51,7 @@ export const MessageBoard = ({ room }: { room: Room | undefined | null }) => {
           direction={"column-reverse"}
           sx={{
             px: 3,
-            py: 2,
+            py: 4,
             width: "100%",
             overflowY: "scroll",
           }}
