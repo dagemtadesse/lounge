@@ -31,7 +31,7 @@ export default function Home() {
               height: "100%",
               width: { xs: "100vw", sm: "calc(100vw * 2 / 5)", md: 384 },
               position: { xs: "absolute", sm: "relative" },
-              bgcolor: "background.default",
+              bgcolor: "background.paper",
               zIndex: 150,
               flexShrink: 0,
             }}
@@ -46,6 +46,7 @@ export default function Home() {
             height: "100%",
             flexGrow: 1,
             overflow: "hidden",
+            bgcolor: "background.default",
           }}
           elevation={0}
         >

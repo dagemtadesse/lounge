@@ -69,8 +69,6 @@ export const MessageForm = ({ room }: { room: Room }) => {
     },
   });
 
-  console.log(activeMessage);
-
   useEffect(() => {
     if (activeMessage && activeMessage.action == "edit") {
       setValues({ message: activeMessage.data.content });
@@ -83,7 +81,7 @@ export const MessageForm = ({ room }: { room: Room }) => {
         <Stack
           sx={{
             flexGrow: 1,
-            bgcolor: "background.default",
+            bgcolor: "background.paper",
             overflow: "hidden",
             position: "relative",
             borderRadius: 3,
@@ -93,7 +91,7 @@ export const MessageForm = ({ room }: { room: Room }) => {
 
           <Paper
             sx={{
-              bgcolor: "background.default",
+              bgcolor: "background.paper",
               p: 1.5,
               zIndex: 120,
               position: "relative",
@@ -114,7 +112,7 @@ export const MessageForm = ({ room }: { room: Room }) => {
         </Stack>
         <IconButton
           type="submit"
-          sx={{ bgcolor: "background.default", p: 1.5 }}
+          sx={{ bgcolor: "background.paper", p: 1.5 }}
         >
           <SendRoundedIcon color="primary" />
         </IconButton>

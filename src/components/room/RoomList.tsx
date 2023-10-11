@@ -50,7 +50,7 @@ export const RoomList = ({
           borderColor: "divider",
           position: "sticky",
           top: 0,
-          bgcolor: "background.default",
+          bgcolor: "background.paper",
           zIndex: 100,
           px: 1.5,
         }}

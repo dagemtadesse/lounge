@@ -16,7 +16,7 @@ export const SearchBar = () => {
         position: "sticky",
         top: 0,
         zIndex: 100,
-        bgcolor: "background.default",
+        bgcolor: "background.paper",
       }}
     >
       <TextField

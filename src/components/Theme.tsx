@@ -16,11 +16,11 @@ const theme = createTheme({
     },
     error: {
       main: red[300],
-      contrastText: "#fff",
+      contrastText: "#fff"
     },
     background: {
-      default: "#28292a",
-      paper: "#202124",
+      default: "#161616",
+      paper: "#202020",
     },
     divider: "rgb(255, 255, 255, 0.1)",
     text: {

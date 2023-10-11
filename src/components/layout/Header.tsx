@@ -44,6 +44,7 @@ export const Header = () => {
         flexGrow: 0,
         height: { xs: "auto", sm: "100%" },
         width: { xs: "100%", sm: "auto" },
+        borderRadius: 0,
         background:
           "linear-gradient(0deg,rgba(209,225,255,.08),rgba(209,225,255,.08)),#1f1f1f",
       }}
