@@ -1,6 +1,5 @@
 import { useFormik } from "formik";
 import {
-  Box,
   IconButton,
   Paper,
   Slide,
@@ -21,17 +20,19 @@ import { useEffect } from "react";
 export const MessageForm = ({ room }: { room: Room }) => {
   const utils = trpc.useContext();
 
-  const { mutateAsync } = trpc.messages.create.useMutation();
+  const onSuccess = () => {
+    utils.messages.getByRoomId.invalidate();
+    utils.chatRoom.getMyRooms.invalidate();
+    utils.chatRoom.recent.invalidate();
+  };
+
+  const { mutateAsync } = trpc.messages.create.useMutation({ onSuccess });
   const { mutateAsync: editMessage } = trpc.messages.edit.useMutation({
-    onSuccess: () => {
-      utils.messages.getByRoomId.invalidate();
-    },
+    onSuccess,
   });
 
   const { mutateAsync: reply } = trpc.messages.reply.useMutation({
-    onSuccess: () => {
-      utils.messages.getByRoomId.invalidate();
-    },
+    onSuccess,
   });
 
   const dispatch = useAppDispatch();
@@ -110,10 +111,7 @@ export const MessageForm = ({ room }: { room: Room }) => {
             />
           </Paper>
         </Stack>
-        <IconButton
-          type="submit"
-          sx={{ bgcolor: "background.paper", p: 1.5 }}
-        >
+        <IconButton type="submit" sx={{ bgcolor: "background.paper", p: 1.5 }}>
           <SendRoundedIcon color="primary" />
         </IconButton>
       </Stack>
