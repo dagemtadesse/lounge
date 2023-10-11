@@ -74,25 +74,32 @@ export const RoomDetails = ({
         <Box sx={{ overflow: "scroll", flexGrow: 1, px: 1 }}>
           {roomDetail && (
             <>
-              <Paper sx={{ borderRadius: 2, p: 2 }}>
-                <Stack direction="row" gap={1.5} alignItems="center" sx={{}}>
-                  <CustomAvatar size={56} room={roomDetail} />
-                  <Stack sx={{ mb: 0.25 }}>
-                    <Typography
-                      variant="body1"
-                      sx={{ color: "grey.300" }}
-                      fontWeight="medium"
-                    >
-                      {roomName}
+              <Stack
+                direction="row"
+                gap={1.5}
+                alignItems="center"
+                sx={{
+                  background:
+                    "linear-gradient(0deg,rgba(209,225,255,.08),rgba(209,225,255,.08)),#1f1f1f",
+                  p: 2, borderRadius: 2.5
+                }}
+              >
+                <CustomAvatar size={56} room={roomDetail} />
+                <Stack sx={{ mb: 0.25 }}>
+                  <Typography
+                    variant="body1"
+                    sx={{ color: "grey.300" }}
+                    fontWeight="medium"
+                  >
+                    {roomName}
+                  </Typography>
+                  {roomDetail?.handle && (
+                    <Typography variant="body2" sx={{ color: "grey.500" }}>
+                      @{roomDetail?.handle}
                     </Typography>
-                    {roomDetail?.handle && (
-                      <Typography variant="body2" sx={{ color: "grey.500" }}>
-                        @{roomDetail?.handle}
-                      </Typography>
-                    )}
-                  </Stack>
+                  )}
                 </Stack>
-              </Paper>
+              </Stack>
 
               <Box
                 sx={{
