@@ -123,7 +123,9 @@ export const chatRoomRouter = router({
         where: { id: input },
         include: {
           memberships: {
-            where: { userId: userId },
+            take: 1,
+            where: { userId: { not: userId } },
+            include: { user: true },
           },
         },
       });
@@ -240,5 +242,32 @@ export const chatRoomRouter = router({
       });
 
       return myrooms;
+    }),
+
+  members: protectedProcedure
+    .input(
+      z.object({
+        roomId: z.string(),
+        cursor: z.object({ email: z.string() }).nullish(),
+        size: z.number().nullish(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const size = input.size ?? 10;
+
+      const members = await ctx.prisma.user.findMany({
+        take: size,
+        where: {
+          memberships: { some: { roomId: input.roomId } },
+        },
+      });
+
+      let nextCursor;
+      if (members.length > size) {
+        const lastItem = members.pop();
+        nextCursor = { email: lastItem!.email };
+      }
+
+      return { items: members, nextCursor };
     }),
 });

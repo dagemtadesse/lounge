@@ -1,7 +1,10 @@
 import {
   Box,
   IconButton,
+  Paper,
   Stack,
+  Tab,
+  Tabs,
   Toolbar,
   Typography,
   useTheme,
@@ -10,16 +13,29 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useAppSelector } from "@/store";
 import { setRoomDetail } from "@/store/reducers/app";
 import { useDispatch } from "react-redux";
-import { blue } from "@mui/material/colors";
+import { RoomMemberList } from "./RoomMemberList";
+import { useState } from "react";
+import { CustomAvatar } from "../CustomAvatar";
+import { RoomWithMembers } from "./RecentRooms";
 
-export const RoomDetails = () => {
+export const RoomDetails = ({
+  room,
+}: {
+  room: RoomWithMembers | undefined | null;
+}) => {
   const theme = useTheme();
 
   const dispatch = useDispatch();
-  const { roomDetail } = useAppSelector((state) => state.app);
 
-  const handleClose = () => dispatch(setRoomDetail(undefined));
-  const isOpened = !!roomDetail;
+  const handleClose = () => dispatch(setRoomDetail(false));
+  const { roomDetail: isOpened } = useAppSelector((state) => state.app);
+
+  const [value, setValue] = useState(0);
+
+  const roomDetail = room;
+  let roomName: string | null | undefined = roomDetail?.name;
+  if (roomDetail?.isPersonal)
+    roomName = roomDetail.memberships?.[0].user?.email;
 
   return (
     <Box
@@ -29,17 +45,19 @@ export const RoomDetails = () => {
         transition: theme.transitions.create(["left", "width"]),
         bgcolor: "background.paper",
         position: { xs: "absolute", lg: "static" },
-        width: { xs: "100%", lg: isOpened ? "25vw" : 0 },
+        width: { xs: "100%", lg: isOpened ? "26vw" : 0 },
         top: 0,
         left: isOpened ? 0 : "100%",
         bottom: 0,
         zIndex: 200,
       }}
     >
-      <Box
+      <Stack
         sx={{
           position: "relative",
           marginRight: isOpened ? 0 : -500,
+          overflow: "hidden",
+          height: "100%",
         }}
       >
         <Toolbar sx={{ px: { xs: 1 } }}>
@@ -52,8 +70,51 @@ export const RoomDetails = () => {
             </Typography>
           </Stack>
         </Toolbar>
-        <Box sx={{ bgcolor: "background.default", height: 100 }}></Box>
-      </Box>
+
+        <Box sx={{ overflow: "scroll", flexGrow: 1, px: 1 }}>
+          {roomDetail && (
+            <>
+              <Paper sx={{ borderRadius: 2, p: 2 }}>
+                <Stack direction="row" gap={1.5} alignItems="center" sx={{}}>
+                  <CustomAvatar size={56} room={roomDetail} />
+                  <Stack sx={{ mb: 0.25 }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "grey.300" }}
+                      fontWeight="medium"
+                    >
+                      {roomName}
+                    </Typography>
+                    {roomDetail?.handle && (
+                      <Typography variant="body2" sx={{ color: "grey.500" }}>
+                        @{roomDetail?.handle}
+                      </Typography>
+                    )}
+                  </Stack>
+                </Stack>
+              </Paper>
+
+              <Box
+                sx={{
+                  borderBottom: 1,
+                  borderColor: "divider",
+                  px: 1,
+                  position: "sticky",
+                  top: 0,
+                }}
+              >
+                <Tabs value={value} aria-label="basic tabs example">
+                  <Tab
+                    label={<Typography variant="subtitle2">Members</Typography>}
+                  />
+                </Tabs>
+              </Box>
+
+              <RoomMemberList room={roomDetail} />
+            </>
+          )}
+        </Box>
+      </Stack>
     </Box>
   );
 };

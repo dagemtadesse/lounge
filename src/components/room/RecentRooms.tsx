@@ -14,7 +14,7 @@ import { Room, RoomMembership, User } from "@prisma/client";
 import { usePathname, useRouter } from "next/navigation";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
-type RoomWithMembers = Room & {
+export type RoomWithMembers = Room & {
   memberships: (RoomMembership & { user: User })[];
 };
 

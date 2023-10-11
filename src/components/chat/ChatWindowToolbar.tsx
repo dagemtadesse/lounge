@@ -8,12 +8,15 @@ import {
   IconButton,
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { Room } from "@prisma/client";
 import { useAppDispatch } from "@/store";
 import { setRoomDetail } from "@/store/reducers/app";
+import { RoomWithMembers } from "../room/RecentRooms";
 
-export function ChatWindowToolbar({ room }: { room?: Room | null }) {
+export function ChatWindowToolbar({ room }: { room?: RoomWithMembers | null }) {
   const dispatch = useAppDispatch();
+
+  let roomName: string | null | undefined = room?.name;
+  if (room?.isPersonal) roomName = room.memberships?.[0].user?.email;
 
   return (
     <Paper elevation={0} sx={{}}>
@@ -39,11 +42,10 @@ export function ChatWindowToolbar({ room }: { room?: Room | null }) {
                 </Avatar>
                 <Typography
                   variant="subtitle1"
-                  ml={2}
-                  onClick={() => dispatch(setRoomDetail(room!))}
+                  onClick={() => dispatch(setRoomDetail(true))}
                   sx={{ cursor: "pointer" }}
                 >
-                  {room?.name}
+                  {roomName || "Chat room"}
                 </Typography>
               </>
             ) : (

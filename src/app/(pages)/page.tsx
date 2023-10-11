@@ -1,13 +1,14 @@
 "use client";
 
 import { AuthGuard } from "@/components/AuthGuard";
-import { Paper, Slide, Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Slide, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { SideBar } from "@/components/layout/SideBar";
 import { CreateChatRoomModal } from "@/components/modals/CreateChatRoomModal";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 import { ContactsModal } from "@/components/contact/ContactModal";
 import { useSearchParams } from "next/navigation";
 import { RoomDetails } from "@/components/room/RoomDetail";
+import { trpc } from "../_trpc/client";
 
 export default function Home() {
   const theme = useTheme();
@@ -17,6 +18,10 @@ export default function Home() {
   const roomId = params.get("roomId");
 
   const open = !roomId || matches;
+
+  const { data: room } = trpc.chatRoom.getById.useQuery(roomId!, {
+    enabled: Boolean(roomId),
+  });
 
   return (
     <AuthGuard require="loggedIn">
@@ -48,11 +53,11 @@ export default function Home() {
             flexGrow: 1,
             overflow: "hidden",
             bgcolor: "background.default",
-            position: "relative"
+            position: "relative",
           }}
         >
-          <ChatWindow />
-          <RoomDetails />
+          <ChatWindow room={room} />
+          <RoomDetails room={room} />
         </Stack>
       </Stack>
 

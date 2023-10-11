@@ -1,9 +1,10 @@
+import { RoomWithMembers } from "@/components/room/RecentRooms";
 import { Room } from "@prisma/client";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type ModalState = {
   activeModalId?: string;
-  roomDetail?: Room;
+  roomDetail?: boolean;
   alert?: {
     message: string;
     type: "error" | "success" | "info" | "warning";
@@ -38,7 +39,7 @@ export const appSlice = createSlice({
       state.alert = undefined;
     },
 
-    setRoomDetail(state, action: PayloadAction<Room | undefined>) {
+    setRoomDetail(state, action: PayloadAction<boolean>) {
       state.roomDetail = action.payload;
     },
   },
