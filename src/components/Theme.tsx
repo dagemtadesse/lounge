@@ -22,7 +22,7 @@ const theme = createTheme({
       default: "#161616",
       paper: "#202020",
     },
-    divider: "rgb(255, 255, 255, 0.1)",
+    divider: "rgb(255, 255, 255, 0.05)",
     text: {
       primary: "rgb(237, 237, 237)",
       secondary: "rgb(153, 153, 153)",

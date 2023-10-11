@@ -9,8 +9,12 @@ import {
 } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Room } from "@prisma/client";
+import { useAppDispatch } from "@/store";
+import { setRoomDetail } from "@/store/reducers/app";
 
 export function ChatWindowToolbar({ room }: { room?: Room | null }) {
+  const dispatch = useAppDispatch();
+
   return (
     <Paper elevation={0} sx={{}}>
       <Toolbar variant="dense" sx={{ p: 1.5, px: 1 }}>
@@ -33,7 +37,12 @@ export function ChatWindowToolbar({ room }: { room?: Room | null }) {
                 >
                   {room?.emojiIcon || room?.name.at(0)}
                 </Avatar>
-                <Typography variant="subtitle1" ml={2}>
+                <Typography
+                  variant="subtitle1"
+                  ml={2}
+                  onClick={() => dispatch(setRoomDetail(room!))}
+                  sx={{ cursor: "pointer" }}
+                >
                   {room?.name}
                 </Typography>
               </>

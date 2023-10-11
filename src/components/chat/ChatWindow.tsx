@@ -1,5 +1,5 @@
 import { trpc } from "@/app/_trpc/client";
-import { Button, Container, Stack, SxProps, useTheme } from "@mui/material";
+import { Button, Container, Stack, useTheme } from "@mui/material";
 import { useSearchParams } from "next/navigation";
 import { MessageBoard } from "../messages/MessageBoard";
 import { MessageForm } from "../messages/MessageForm";
@@ -16,7 +16,12 @@ export const ChatWindow = () => {
   const joinChatroom = trpc.chatRoom.join.useMutation();
 
   return (
-    <Stack sx={{ height: "100%" }}>
+    <Stack
+      sx={{
+        height: "100%",
+        flexGrow: 1,
+      }}
+    >
       <ChatWindowToolbar room={room} />
       <Container
         sx={{

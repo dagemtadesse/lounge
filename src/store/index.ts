@@ -1,7 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
-import app from "./reducers/modals";
+import app from "./reducers/app";
 import chatRoom from "./reducers/chatRoom";
 
 const store = configureStore({

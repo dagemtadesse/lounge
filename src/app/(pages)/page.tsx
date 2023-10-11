@@ -7,7 +7,7 @@ import { CreateChatRoomModal } from "@/components/modals/CreateChatRoomModal";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 import { ContactsModal } from "@/components/contact/ContactModal";
 import { useSearchParams } from "next/navigation";
-import { relative } from "path";
+import { RoomDetails } from "@/components/room/RoomDetail";
 
 export default function Home() {
   const theme = useTheme();
@@ -40,18 +40,20 @@ export default function Home() {
           </Stack>
         </Slide>
 
-        <Paper
+        <Stack
+          direction={"row"}
           sx={{
             p: 0,
             height: "100%",
             flexGrow: 1,
             overflow: "hidden",
             bgcolor: "background.default",
+            position: "relative"
           }}
-          elevation={0}
         >
           <ChatWindow />
-        </Paper>
+          <RoomDetails />
+        </Stack>
       </Stack>
 
       <CreateChatRoomModal />

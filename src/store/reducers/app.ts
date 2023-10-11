@@ -1,7 +1,9 @@
+import { Room } from "@prisma/client";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type ModalState = {
   activeModalId?: string;
+  roomDetail?: Room;
   alert?: {
     message: string;
     type: "error" | "success" | "info" | "warning";
@@ -35,10 +37,14 @@ export const appSlice = createSlice({
     removeAlert(state) {
       state.alert = undefined;
     },
+
+    setRoomDetail(state, action: PayloadAction<Room | undefined>) {
+      state.roomDetail = action.payload;
+    },
   },
 });
 
-export const { closeModal, openModal, setAlert, removeAlert } =
+export const { closeModal, openModal, setAlert, removeAlert, setRoomDetail } =
   appSlice.actions;
 
 export default appSlice.reducer;

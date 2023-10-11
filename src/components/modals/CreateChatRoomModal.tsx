@@ -2,7 +2,7 @@
 
 import { trpc } from "@/app/_trpc/client";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { closeModal, setAlert } from "@/store/reducers/modals";
+import { closeModal, setAlert } from "@/store/reducers/app";
 import { ChatRoomSchema } from "@/validations/chatRoomSchema";
 import {
   Avatar,

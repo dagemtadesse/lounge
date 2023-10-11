@@ -1,7 +1,7 @@
 "use client"
 
 import { useAppDispatch, useAppSelector } from "@/store";
-import { removeAlert } from "@/store/reducers/modals";
+import { removeAlert } from "@/store/reducers/app";
 import { Alert, Snackbar } from "@mui/material";
 
 export const SnackbarProvider = () => {

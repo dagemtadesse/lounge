@@ -18,7 +18,7 @@ import { ROUTES } from "@/routes";
 import Link from "next/link";
 import { Add, GroupAdd } from "@mui/icons-material";
 import { CreateChatRoomModal } from "../modals/CreateChatRoomModal";
-import { openModal } from "@/store/reducers/modals";
+import { openModal } from "@/store/reducers/app";
 import { useAppDispatch } from "@/store";
 import { ContactsModal } from "../contact/ContactModal";
 import zIndex from "@mui/material/styles/zIndex";

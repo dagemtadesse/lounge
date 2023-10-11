@@ -3,7 +3,7 @@
 import { trpc } from "@/app/_trpc/client";
 import { usePaginator } from "@/hooks/usePaginator";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { closeModal } from "@/store/reducers/modals";
+import { closeModal } from "@/store/reducers/app";
 import { Search } from "@mui/icons-material";
 import {
   Box,
