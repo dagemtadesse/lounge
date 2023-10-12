@@ -4,13 +4,19 @@ import {
   Box,
   IconButton,
   List,
+  ListItemIcon,
+  ListItemText,
+  Menu,
+  MenuItem,
   Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
 import { Room, User } from "@prisma/client";
 import RemoveIcon from "@mui/icons-material/Remove";
-import { Fragment } from "react";
+import { Fragment, useContext, useState } from "react";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { confirmationContext } from "../modals/ConfirmationDialog";
 
 export const RoomMemberList = ({ room }: { room: Room }) => {
   const { data: members } = trpc.chatRoom.members.useInfiniteQuery(
@@ -34,7 +40,7 @@ export const RoomMemberList = ({ room }: { room: Room }) => {
           members.pages.map((page, index) => (
             <Fragment key={"room-member" + index}>
               {page.items.map((user, index) => (
-                <RoomMemberItem member={user} key={user.id} />
+                <RoomMemberItem member={user} room={room} key={user.id} />
               ))}
             </Fragment>
           ))}
@@ -43,7 +49,48 @@ export const RoomMemberList = ({ room }: { room: Room }) => {
   );
 };
 
-export const RoomMemberItem = ({ member }: { member: User }) => {
+export const RoomMemberItem = ({
+  member,
+  room,
+}: {
+  member: User;
+  room: Room;
+}) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const utils = trpc.useContext();
+
+  const { mutateAsync: removeUser } = trpc.members.remove.useMutation({
+    onSuccess: () => {
+      utils.chatRoom.members.invalidate();
+    },
+  });
+
+  const confirmationCtx = useContext(confirmationContext);
+
+  const handleRemoveMember = async () => {
+    handleClose();
+    confirmationCtx.openModal({
+      title: "Remove member",
+      actionName: "Remove",
+      description: "Are you sure you want to remove the member form the chat?",
+      callback: async () => {
+        try {
+          await removeUser({ memberId: member.id, roomId: room.id });
+        } catch (error) {}
+      },
+    });
+  };
+
   return (
     <Stack
       direction="row"
@@ -65,11 +112,30 @@ export const RoomMemberItem = ({ member }: { member: User }) => {
       <IconButton
         edge="end"
         aria-label="delete"
-        color="error"
         sx={{ ml: "auto" }}
+        onClick={handleClick}
       >
-        <RemoveIcon />
+        <MoreVertIcon />
       </IconButton>
+
+      <Menu
+        id="basic-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        MenuListProps={{
+          "aria-labelledby": "basic-button",
+        }}
+      >
+        <MenuItem onClick={handleRemoveMember}>
+          <ListItemIcon>
+            <RemoveIcon color="error" />
+          </ListItemIcon>
+          <ListItemText>
+            <Typography variant="body2">Remove</Typography>
+          </ListItemText>
+        </MenuItem>
+      </Menu>
     </Stack>
   );
 };
