@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   IconButton,
   Paper,
   Stack,
@@ -14,9 +15,14 @@ import { useAppSelector } from "@/store";
 import { setRoomDetail } from "@/store/reducers/app";
 import { useDispatch } from "react-redux";
 import { RoomMemberList } from "./RoomMemberList";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { CustomAvatar } from "../CustomAvatar";
 import { RoomWithMembers } from "./RecentRooms";
+
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import { confirmationContext } from "../modals/ConfirmationDialog";
+import { trpc } from "@/app/_trpc/client";
 
 export const RoomDetails = ({
   room,
@@ -36,6 +42,28 @@ export const RoomDetails = ({
   let roomName: string | null | undefined = roomDetail?.name;
   if (roomDetail?.isPersonal)
     roomName = roomDetail.memberships?.[0].user?.email;
+
+  const confirmationCtx = useContext(confirmationContext);
+  const utils = trpc.useContext();
+
+  const { mutateAsync: deleteRoom } = trpc.chatRoom.delete.useMutation({
+    onSuccess: () => {
+      utils.chatRoom.recent.invalidate();
+    },
+  });
+
+  const handleDeleteRoom = async () => {
+    confirmationCtx.openModal({
+      title: "Delete Room",
+      actionName: "Delete",
+      description: "Are you sure you want to delete the chat room?",
+      callback: async () => {
+        try {
+          if (room?.id) await deleteRoom(room.id);
+        } catch (error) {}
+      },
+    });
+  };
 
   return (
     <Box
@@ -74,32 +102,52 @@ export const RoomDetails = ({
         <Box sx={{ overflow: "scroll", flexGrow: 1, px: 1 }}>
           {roomDetail && (
             <>
-              <Stack
-                direction="row"
-                gap={1.5}
-                alignItems="center"
+              <Box
                 sx={{
                   background:
                     "linear-gradient(0deg,rgba(209,225,255,.08),rgba(209,225,255,.08)),#1f1f1f",
-                  p: 2, borderRadius: 2.5
+                  p: 2,
+                  borderRadius: 2.5,
                 }}
               >
-                <CustomAvatar size={56} room={roomDetail} />
-                <Stack sx={{ mb: 0.25 }}>
-                  <Typography
-                    variant="body1"
-                    sx={{ color: "grey.300" }}
-                    fontWeight="medium"
-                  >
-                    {roomName}
-                  </Typography>
-                  {roomDetail?.handle && (
-                    <Typography variant="body2" sx={{ color: "grey.500" }}>
-                      @{roomDetail?.handle}
+                <Stack direction="row" gap={1.5} alignItems="center">
+                  <CustomAvatar size={56} room={roomDetail} />
+                  <Stack sx={{ mb: 0.25 }}>
+                    <Typography
+                      variant="body1"
+                      sx={{ color: "grey.300" }}
+                      fontWeight="medium"
+                    >
+                      {roomName}
                     </Typography>
-                  )}
+                    {roomDetail?.handle && (
+                      <Typography variant="body2" sx={{ color: "grey.500" }}>
+                        @{roomDetail?.handle}
+                      </Typography>
+                    )}
+                  </Stack>
                 </Stack>
-              </Stack>
+                <Stack direction={"row"} gap={2.5} mt={2.5}>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    sx={{ borderRadius: 100 }}
+                    startIcon={<EditIcon />}
+                  >
+                    Update
+                  </Button>
+                  <Button
+                    size="small"
+                    variant="outlined"
+                    sx={{ borderRadius: 100 }}
+                    startIcon={<DeleteOutlineIcon />}
+                    color="error"
+                    onClick={handleDeleteRoom}
+                  >
+                    Delete
+                  </Button>
+                </Stack>
+              </Box>
 
               <Box
                 sx={{

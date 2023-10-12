@@ -86,7 +86,13 @@ export const chatRoomRouter = router({
       const userId = ctx.session!.userId;
 
       return await ctx.prisma.room.delete({
-        where: { createdById: userId, id: roomId },
+        where: {
+          OR: [
+            { createdById: userId },
+            { isPersonal: true, memberships: { some: { userId } } },
+          ],
+          id: roomId,
+        },
       });
     }),
 

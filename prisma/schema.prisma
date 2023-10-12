@@ -95,7 +95,7 @@ model Message {
   authorId      String?
   author        User?           @relation(fields: [authorId], references: [id])
   roomId        String
-  room          Room            @relation(fields: [roomId], references: [id])
+  room          Room            @relation(fields: [roomId], references: [id], onDelete: Cascade)
   messageStatus MessageStatus[]
   parentId      String?
   parentMessage Message?        @relation("parentMessage", fields: [parentId], references: [id])
