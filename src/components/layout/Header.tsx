@@ -17,11 +17,9 @@ import { Logo } from "../icons/logo";
 import { ROUTES } from "@/routes";
 import Link from "next/link";
 import { Add, GroupAdd } from "@mui/icons-material";
-import { CreateChatRoomModal } from "../modals/CreateChatRoomModal";
-import { openModal } from "@/store/reducers/app";
+import { openModal, setActiveRoom } from "@/store/reducers/app";
 import { useAppDispatch } from "@/store";
 import { ContactsModal } from "../contact/ContactModal";
-import zIndex from "@mui/material/styles/zIndex";
 
 export const Header = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -90,7 +88,7 @@ export const Header = () => {
           >
             <Fab
               size="small"
-              onClick={() => dispatch(openModal(CreateChatRoomModal.name))}
+              onClick={() => dispatch(setActiveRoom(null))}
             >
               <GroupAdd />
             </Fab>

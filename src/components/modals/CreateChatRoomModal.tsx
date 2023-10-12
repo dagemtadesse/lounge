@@ -2,7 +2,7 @@
 
 import { trpc } from "@/app/_trpc/client";
 import { useAppDispatch, useAppSelector } from "@/store";
-import { closeModal, setAlert } from "@/store/reducers/app";
+import { closeModal, setActiveRoom, setAlert } from "@/store/reducers/app";
 import { ChatRoomSchema } from "@/validations/chatRoomSchema";
 import {
   Avatar,
@@ -19,24 +19,25 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { Room } from "@prisma/client";
 import EmojiPicker from "emoji-picker-react";
 import { useFormik } from "formik";
 import { useState } from "react";
+import { util } from "zod";
 import { toFormikValidationSchema } from "zod-formik-adapter";
 
 export const CreateChatRoomModal = () => {
   const dispatch = useAppDispatch();
 
-  const { activeModalId } = useAppSelector((state) => state.app);
-  const modalId = CreateChatRoomModal.name;
+  const { activeRoom } = useAppSelector((state) => state.app);
 
   const onCloseModal = () => {
-    dispatch(closeModal());
+    dispatch(setActiveRoom(undefined));
   };
 
   return (
     <Modal
-      open={modalId == activeModalId}
+      open={activeRoom !== undefined}
       onClose={onCloseModal}
       keepMounted={false}
     >
@@ -51,13 +52,19 @@ export const CreateChatRoomModal = () => {
           p: 2,
         }}
       >
-        <CreateChatRoomForm closeModal={onCloseModal} />
+        <CreateChatRoomForm closeModal={onCloseModal} room={activeRoom!} />
       </Paper>
     </Modal>
   );
 };
 
-const CreateChatRoomForm = ({ closeModal }: { closeModal: () => void }) => {
+const CreateChatRoomForm = ({
+  closeModal,
+  room,
+}: {
+  closeModal: () => void;
+  room: Room | undefined;
+}) => {
   const dispatch = useAppDispatch();
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
@@ -73,7 +80,16 @@ const CreateChatRoomForm = ({ closeModal }: { closeModal: () => void }) => {
   const open = Boolean(anchorEl);
   const id = open ? "emoji-popover" : undefined;
 
-  const createRoom = trpc.chatRoom.createChatRoom.useMutation();
+  const utils = trpc.useContext();
+
+  const createRoom = trpc.chatRoom.createChatRoom.useMutation({
+    onSuccess: () => {
+      utils.chatRoom.recent.invalidate();
+      utils.chatRoom.getMyRooms.invalidate();
+      utils.chatRoom.getById.invalidate();
+    },
+  });
+  const { mutateAsync: updateRoom } = trpc.chatRoom.update.useMutation();
 
   const {
     values,
@@ -86,28 +102,32 @@ const CreateChatRoomForm = ({ closeModal }: { closeModal: () => void }) => {
   } = useFormik({
     onSubmit: async (values, { setErrors }) => {
       try {
-        await createRoom.mutateAsync({
-          ...values,
-          handle: values.isPublic ? values.handle : undefined,
-        });
-        dispatch(
-          setAlert({
-            message: "Successfuly created a chat room.",
-            type: "success",
-          })
-        );
+        if (room) {
+          await updateRoom({
+            ...values,
+            id: room.id,
+            handle: values.isPublic ? values.handle : undefined,
+          });
+        } else {
+          await createRoom.mutateAsync({
+            ...values,
+            handle: values.isPublic ? values.handle : undefined,
+          });
+          dispatch(
+            setAlert({
+              message: "Successfuly created a chat room.",
+              type: "success",
+            })
+          );
+        }
         closeModal();
-      } catch (error) {
-        setErrors({
-          handle: (error as any)?.message ?? "Unable to create a chat room.",
-        });
-      }
+      } catch (error) {}
     },
     initialValues: {
-      emojiIcon: "",
-      name: "",
-      isPublic: false,
-      handle: "",
+      emojiIcon: room?.emojiIcon || "",
+      name: room?.name || "",
+      isPublic: room?.isPublic || false,
+      handle: room?.handle || "",
     },
     validationSchema: toFormikValidationSchema(ChatRoomSchema),
   });
@@ -198,7 +218,7 @@ const CreateChatRoomForm = ({ closeModal }: { closeModal: () => void }) => {
           <Button color="secondary" onClick={closeModal}>
             Cancel
           </Button>
-          <Button type="submit">Create</Button>
+          <Button type="submit">{room ? "Update" : "Create"}</Button>
         </Stack>
       </Stack>
     </form>

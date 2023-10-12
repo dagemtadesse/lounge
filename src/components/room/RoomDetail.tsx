@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { useAppSelector } from "@/store";
-import { setRoomDetail } from "@/store/reducers/app";
+import { setActiveRoom, setRoomDetail } from "@/store/reducers/app";
 import { useDispatch } from "react-redux";
 import { RoomMemberList } from "./RoomMemberList";
 import { useContext, useState } from "react";
@@ -133,6 +133,7 @@ export const RoomDetails = ({
                     variant="outlined"
                     sx={{ borderRadius: 100 }}
                     startIcon={<EditIcon />}
+                    onClick={() => dispatch(setActiveRoom(room))}
                   >
                     Update
                   </Button>

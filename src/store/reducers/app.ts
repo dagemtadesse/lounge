@@ -4,6 +4,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 type ModalState = {
   activeModalId?: string;
+  activeRoom?: Room | null | undefined;
   roomDetail?: boolean;
   alert?: {
     message: string;
@@ -42,10 +43,20 @@ export const appSlice = createSlice({
     setRoomDetail(state, action: PayloadAction<boolean>) {
       state.roomDetail = action.payload;
     },
+
+    setActiveRoom(state, action: PayloadAction<Room | undefined | null>) {
+      state.activeRoom = action.payload;
+    },
   },
 });
 
-export const { closeModal, openModal, setAlert, removeAlert, setRoomDetail } =
-  appSlice.actions;
+export const {
+  closeModal,
+  openModal,
+  setAlert,
+  removeAlert,
+  setRoomDetail,
+  setActiveRoom,
+} = appSlice.actions;
 
 export default appSlice.reducer;

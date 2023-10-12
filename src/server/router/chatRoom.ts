@@ -1,4 +1,7 @@
-import { ChatRoomSchema } from "@/validations/chatRoomSchema";
+import {
+  ChatRoomSchema,
+  UpdateChatRoomSchema,
+} from "@/validations/chatRoomSchema";
 import { Prisma } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
@@ -93,6 +96,17 @@ export const chatRoomRouter = router({
           ],
           id: roomId,
         },
+      });
+    }),
+
+  update: protectedProcedure
+    .input(UpdateChatRoomSchema)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session!.userId;
+
+      return await ctx.prisma.room.update({
+        where: { id: input.id },
+        data: { ...input },
       });
     }),
 
